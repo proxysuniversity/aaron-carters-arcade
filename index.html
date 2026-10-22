@@ -7,7 +7,7 @@
   <meta name="description" content="Aaron Carter Arcade - games and movies in one place.">
   <script>
     // Set to true to replace the entire arcade with the maintenance screen.
-    const maintenance = true;
+    const maintenance = false;
     if (maintenance) document.documentElement.classList.add('maintenance-mode');
   </script>
   <link rel="manifest" href="manifest.webmanifest">
@@ -683,9 +683,9 @@
         <li>changed the Campus Student favicon so it could load better</li>
         <li>added notes on the update log</li>
         <li>made cursor in front the update logs window</li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>added 7+ games (without thumnails)</li>
+        <li>supposed to be 5+ movies and apps but not done, gn yall.</li>
+        <li>i know, i know it's not done but im tired so ill finish it tmrw</li>
         <li></li>
         <li></li>
         <li></li>
@@ -774,6 +774,7 @@
         "welcome to my arcade, movies, shows and games are hot and fresh"
       ],
       announcementMessages: [
+        "this update isn't done, check the update logs maybe?
         "welcome to aaron carter arcade, presented by proxy's university!",
         "added 8+ new games (Oct 14, 2026),im tired gng, more movies should actually come soon.. maybe tommrow...?",
         "the website's not perfect. still in it's w.i.p stage tho.",
@@ -846,16 +847,21 @@
       { name: "Getaway Shootout", image: "https://www.drifted.com/wp-content/uploads/2023/05/getaway-shootout-570-featured_16_9.jpg", link: "https://bro-two.vercel.app/", file: "", description: "Getaway Shootout is a chaotic, physics-based online and local multiplayer racing and parkour game developed by New Eich Games and released in August 2018.", hide: false }, // Game slot 38
       { name: "Sonic Mania Plus", image: "https://assetsio.gnwcdn.com/dhbsh_xuyaazdmr.jpg?width=1600&height=900&fit=crop&quality=100&format=png&enable=upscale&auto=webp", link: "https://vinmannie.github.io/SonicManiaWeb/RSDKv5.html", file: "", description: "(uploader's note: MAIN MENU CRASHES!!!! Press (Esc) to use Dev Menu to access levels.)", hide: false }, // Game slot 39
       { name: "Sonic Robo Blast 2", image: "https://srb2wp-data.nyc3.cdn.digitaloceanspaces.com/wp-content/uploads/srb2-title.png", link: "https://vinmannie.github.io/srb2web/", file: "", description: "", hide: false }, // Game slot 40
-      { name: "Five Nights At Freddy's", image: "https://static.wikia.nocookie.net/freddy-fazbears-pizza/images/d/da/FNaF1.jpg/revision/latest/scale-to-width-down/1200?cb=20230410020858", link: "https://sussygamedeveloper.github.io/FNAF1/", file: "", description: "", hide: false }, // Game slot 41
-      { name: "Five Nights At Freddy's 2", image: "https://static.wikia.nocookie.net/freddy-fazbears-pizza/images/e/e3/FNaF_2_Switch.jpg/revision/latest/thumbnail/width/360/height/360?cb=20210405111155", link: "https://sussygamedeveloper.github.io/FNAF2/", file: "", description: "", hide: false }, // Game slot 42
+      { name: "Five Nights At Freddy's", image: "https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/fnaf1_cover.png", link: "https://sussygamedeveloper.github.io/FNAF1/", file: "", description: "", hide: false }, // Game slot 41
+      { name: "Five Nights At Freddy's 2", image: "https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/fnaf2_cover.png", link: "https://sussygamedeveloper.github.io/FNAF2/", file: "", description: "", hide: false }, // Game slot 42
       { name: "Five Nights At Freddy's Ultimate Custom Night", image: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/871720/header.jpg?t=1568143255", link: "https://sussygamedeveloper.github.io/UCN-HTML5/", file: "", description: "", hide: false }, // Game slot 43
       { name: "Five Nights At Freddy's Sister Location", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/506610/capsule_616x353.jpg?t=1579635985", link: "https://catgenix22.github.io/FNAFSLcat.github.io/", file: "", description: "", hide: false }, // Game slot 44
-      { name: "", image: "", link: "", file: "", description: "", hide: true }, // Game slot 45
-      { name: "", image: "", link: "", file: "", description: "", hide: true }, // Game slot 46
-      { name: "", image: "", link: "", file: "", description: "", hide: true }, // Game slot 47
-      { name: "", image: "", link: "", file: "", description: "", hide: true }, // Game slot 48
-      { name: "", image: "", link: "", file: "", description: "", hide: true }, // Game slot 49
-      { name: "", image: "", link: "", file: "", description: "", hide: true }, // Game slot 50
+      { name: "Karate Bros", image: "", link: "https://proxysuniversity.github.io/games/karate-bros.html", file: "", description: "", hide: false }, // Game slot 45 (starts here ig)
+      { name: "Stickman Hook", image: "", link: "https://proxysuniversity.github.io/games/stickman-hook.html", file: "", description: "", hide: false }, // Game slot 46
+      { name: "Soccer Bros", image: "", link: "https://proxysuniversity.github.io/games/soccer-bros.html", file: "", description: "", hide: false }, // Game slot 47
+      { name: "Baseball Bros", image: "", link: "https://proxysuniversity.github.io/games/baseball-bros.html", file: "", description: "", hide: false }, // Game slot 48
+      { name: "Wrestle Bros", image: "", link: "https://proxysuniversity.github.io/games/wrestle-bros.html", file: "", description: "", hide: false }, // Game slot 49
+      { name: "Football Bros", image: "", link: "https://proxysuniversity.github.io/games/football-bros.html", file: "", description: "", hide: false }, // Game slot 50
+      { name: "Ping Pong Chaos", image: "", link: "https://proxysuniversity.github.io/games/ping-pong-chaos.html", file: "", description: "", hide: false }, // Game slot 51
+      { name: "Hill Climb Racing Lite", image: "", link: "https://proxysuniversity.github.io/games/hill-climb-racing-lite.html", file: "", description: "", hide: true }, // Game slot 52
+      { name: "Hill Climb Racing Lite", image: "", link: "https://proxysuniversity.github.io/games/hill-climb-racing-lite.html", file: "", description: "", hide: true }, // Game slot 53
+      { name: "Hill Climb Racing Lite", image: "", link: "https://proxysuniversity.github.io/games/hill-climb-racing-lite.html", file: "", description: "", hide: true }, // Game slot 54
+      { name: "Hill Climb Racing Lite", image: "", link: "https://proxysuniversity.github.io/games/hill-climb-racing-lite.html", file: "", description: "", hide: true }, // Game slot 55
     ];
 
     // Movies: title, image, googleDriveVideo (Google Drive video URL), link (fallback), description, hide.
