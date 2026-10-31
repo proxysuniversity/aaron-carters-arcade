@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: white;
+  color: black;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  padding: 12px;
+  margin: 0;
+}
+
+.logo {
+  display: block;
+  width: 450px;
+  max-width: 95%;
+  height: auto;
+  object-fit: contain;
+  margin: 0 auto 20px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+section {
+  margin-bottom: 18px;
+}
+
+h2 {
+  font-size: 20px;
+  margin: 0 0 6px;
+}
+
+ul {
+  margin: 0;
+  padding-left: 25px;
+}
+
+li {
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+</style>
+</head>
+<body>
+
+<img class="logo"
+src="https://proxysuniversity.github.io/aaron-carters-arcade/newlogo.png"
+alt="Aaron Carter's Arcade Logo">
+
+<div id="sections"></div>
+
+<script>
+// hide: false = show section
+// hide: true = hide section
+// Each section has 6 editable bullet points.
+
+const sections = [
+  { title: "Section 1", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 2", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 3", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 4", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 5", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 6", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 7", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 8", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 9", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 10", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 11", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 12", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 13", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 14", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 15", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 16", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 17", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 18", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 19", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] },
+  { title: "Section 20", hide: false, text: ["Text 1.", "Text 2.", "Text 3.", "Text 4.", "Text 5.", "Text 6."] }
+];
+
+const container = document.getElementById("sections");
+
+sections.forEach(section => {
+  if (section.hide) return;
+
+  const wrapper = document.createElement("section");
+  const heading = document.createElement("h2");
+  heading.textContent = section.title;
+
+  const list = document.createElement("ul");
+
+  section.text.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    list.appendChild(li);
+  });
+
+  wrapper.appendChild(heading);
+  wrapper.appendChild(list);
+  container.appendChild(wrapper);
+});
+</script>
+
+</body>
+</html>
