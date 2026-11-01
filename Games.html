@@ -1,0 +1,481 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aaron Carter's Arcade</title>
+<link rel="icon" href="https://proxysuniversity.github.io/hidefalvicon.png">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: white;
+  color: #111;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+  padding: 20px 24px 12px;
+  text-align: center;
+}
+
+.logo {
+  display: inline-block;
+  width: 340px;
+  max-width: 90%;
+  height: auto;
+  animation: floatLogo 4s ease-in-out infinite;
+}
+
+@keyframes floatLogo {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.search-area {
+  padding: 8px 20px 20px;
+  text-align: center;
+}
+
+#search {
+  width: 100%;
+  max-width: 600px;
+  padding: 13px 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  background: white;
+  color: #111;
+  outline: none;
+}
+
+#search:focus { border-color: #777; }
+
+#gameSection { padding: 0 20px 24px; }
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 21px;
+}
+
+#gameCount {
+  color: #777;
+  font-size: 13px;
+}
+
+#gameList {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  padding: 5px 0 14px;
+  scrollbar-width: thin;
+  scrollbar-color: #bbb white;
+}
+
+.game-item {
+  flex: 0 0 145px;
+  width: 145px;
+  color: #111;
+  text-decoration: none;
+  cursor: pointer;
+  outline-offset: 3px;
+}
+
+.game-item img {
+  display: block;
+  width: 145px;
+  height: 95px;
+  object-fit: cover;
+  background: #eee;
+  border-radius: 3px;
+}
+
+.game-item:hover .game-name { text-decoration: underline; }
+
+.game-name {
+  display: block;
+  margin-top: 7px;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.35;
+}
+
+.game-description {
+  margin-top: 4px;
+  color: #666;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+#noResults {
+  display: none;
+  padding: 20px 0;
+  color: #666;
+}
+
+#playerSection {
+  display: none;
+  padding: 0 20px 24px;
+}
+
+.player-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+#playingTitle {
+  margin: 0;
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+
+.player-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.player-buttons button {
+  padding: 9px 13px;
+  background: white;
+  color: #111;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.player-buttons button:hover { background: #eee; }
+
+#gameFrame {
+  display: block;
+  width: 100%;
+  height: 70vh;
+  min-height: 350px;
+  border: 1px solid #ccc;
+  background: white;
+}
+
+#gameFile {
+  display: none;
+  width: 100%;
+  height: 70vh;
+  min-height: 350px;
+  border: 1px solid #ccc;
+}
+
+#gameFileFrame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+#playerMessage {
+  display: none;
+  padding: 20px;
+  border: 1px solid #ddd;
+  color: #444;
+  line-height: 1.6;
+}
+
+#playerMessage a { color: #111; }
+
+footer {
+  padding: 18px;
+  border-top: 1px solid #eee;
+  color: #777;
+  text-align: center;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  header { padding-top: 22px; }
+
+  .logo { width: 280px; }
+
+  .game-item {
+    flex-basis: 125px;
+    width: 125px;
+  }
+
+  .game-item img {
+    width: 125px;
+    height: 85px;
+  }
+
+  #gameFrame,
+  #gameFile {
+    height: 65vh;
+    min-height: 300px;
+  }
+
+  #playerSection,
+  #gameSection {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <img
+    class="logo"
+    src="https://proxysuniversity.github.io/aaron-carters-arcade/newlogo.png"
+    alt="Aaron Carter's Arcade logo ig..."
+  >
+</header>
+
+<div class="search-area">
+  <input
+    id="search"
+    type="search"
+    placeholder="Search games..."
+    autocomplete="off"
+    aria-label="Search games"
+  >
+</div>
+
+<section id="playerSection">
+  <div class="player-top">
+    <h2 id="playingTitle">Game</h2>
+    <div class="player-buttons">
+      <button id="fullscreen">full screen the game</button>
+      <button id="closeGame">close the game...</button>
+    </div>
+  </div>
+
+  <iframe
+    id="gameFrame"
+    title="Game window"
+    allow="autoplay; fullscreen; gamepad; clipboard-read; clipboard-write"
+    allowfullscreen
+    referrerpolicy="strict-origin-when-cross-origin"
+  ></iframe>
+
+  <div id="gameFile">
+    <iframe id="gameFileFrame" title="Local game file"></iframe>
+  </div>
+
+  <div id="playerMessage"></div>
+</section>
+
+<section id="gameSection">
+  <div class="section-title">
+    <h2 id="sectionTitle">Games</h2>
+    <span id="gameCount"></span>
+  </div>
+
+  <div id="gameList"></div>
+  <div id="noResults">me and you both know ain't no games with that name bruv</div>
+</section>
+
+<footer>Aaron Carter's Arcade (Games)</footer>
+
+<script>
+const games = [
+  { name: "Want something new on this website?", image: "https://proxysuniversity.github.io/googleformsadvertisement.png", link: "https://proxysuniversity.github.io/aaron-carters-arcade/googleformstextig.html", file: "", description: "in the Google Form, request a Game, Movie, Show, anything or report a Bug or tell us something!", hide: false },
+  { name: "Basket Random", image: "https://imgs.crazygames.com/basket-random_16x9/20240617090207/basket-random_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop", link: "https://proxysuniversity.github.io/games/basket-random.html", file: "", description: "Basket Random is a chaotic, 2-player arcade sports video game developed by RHM Interactive and published by Playgama.", hide: false },
+  { name: "Basketball Stars", image: "https://imgs.crazygames.com/games/basketball-stars-2019/cover-1583231506155.png?metadata=none&quality=100&width=1200&height=630&fit=crop", link: "https://proxysuniversity.github.io/games/basketball-stars.html", file: "", description: "", hide: false },
+  { name: "Fruit Ninja", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTr2CiSaQTrHj-AmK2KbwScUzH7QgtAnHo_cEXZu7Bxr81x0UjDYTkyLeA&s=10", link: "https://proxysuniversity.github.io/games/fruit-ninja.html", file: "", description: "", hide: false },
+  { name: "Pico's School", image: "https://i.redd.it/3ookbllnq66g1.jpg", link: "https://proxysuniversity.github.io/games/picos-school.html", file: "", description: "", hide: true },
+  { name: "Ragdoll Archers", image: "https://imgs.crazygames.com/ragdoll-archers_16x9/20250926080758/ragdoll-archers_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop", link: "https://proxysuniversity.github.io/games/ragdoll-archers.htm", file: "", description: "", hide: false },
+  { name: "Candy Crush", image: "https://images5.alphacoders.com/855/thumb-1920-855983.jpg", link: "https://proxysuniversity.github.io/games/candy-crush.html", file: "", description: "", hide: false },
+  { name: "Death Run 3D", image: "https://zapgames.io/cache/data/image/game/death-run-3d-f546x307.webp", link: "https://proxysuniversity.github.io/games/death-run-3D.html", file: "", description: "", hide: false },
+  { name: "Happy Wheels", image: "https://cdn.wallpapersafari.com/6/53/D7tQyp.png", link: "https://proxysuniversity.github.io/games/happy-wheels.html", file: "", description: "", hide: false },
+  { name: "Slope", image: "https://image.combat-online.net/images/slop.webp", link: "https://proxysuniversity.github.io/games/slope.html", file: "", description: "", hide: false },
+  { name: "Space Waves", image: "https://i.ytimg.com/vi/0L885f9nUI8/maxresdefault.jpg", link: "https://proxysuniversity.github.io/games/space-waves.html", file: "", description: "", hide: false },
+  { name: "Get On Top", image: "https://melonplaygroundgame.org/data/image/game/get-on-top.jpg", link: "https://proxysuniversity.github.io/games/get-on-top.html", file: "", description: "", hide: false },
+  { name: "Google Dinosaur Game", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRajet-a2Q2TUfwpMDkWq3AmTqnVpGcTbu7QIK7b1cRWue4kzTGXlFi77gx&s=10", link: "https://proxysuniversity.github.io/games/google-dino.html", file: "", description: "", hide: false },
+  { name: "Tag", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV0xge2VDjDmx4-naAGuRESi0j5okkaWMFXMD8kjEixGIIV09dhclzxNo&s=10", link: "https://proxysuniversity.github.io/games/tag.html", file: "", description: "", hide: false },
+  { name: "Melon Playground", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKEHhe-9Vor2krkpW7TYOyNgdbtXZWw3XTZIitukBSwg&s=10", link: "https://proxysuniversity.github.io/games/melon-playground.html", file: "", description: "", hide: false },
+  { name: "Drive Mad", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ6LOU6_Y9TcwdgnxOT_EnbOqUZCJWYxN_7jXlU-cwQENMEzaB78NgvNE&s=10", link: "https://proxysuniversity.github.io/games/drive-mad.htm", file: "", description: "", hide: false },
+  { name: "Chess", image: "https://upload.wikimedia.org/wikipedia/commons/1/14/A_game_of_chess.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original", link: "https://proxysuniversity.github.io/games/chess.html", file: "", description: "", hide: false },
+  { name: "Bad Time Simulator", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcGB_gTaGs4TcPczLv7_uVcby0SH58ugbJ6j84QUnrdw&s", link: "https://proxysuniversity.github.io/games/bad-time-simulator", file: "", description: "", hide: false },
+  { name: "Jetpack Joyride", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYp_dYozmwwqCrkrpapn-A_k41EM1UTUTttod-T8HQTqgclViak0B7EZYU&s=10", link: "https://proxysuniversity.github.io/games/jetpack-joyride.html", file: "", description: "", hide: false },
+  { name: "Crossy Road", image: "https://www.gamespot.com/wp-content/uploads/original/280/2802776/2765270-crossyroad.jpg", link: "https://proxysuniversity.github.io/games/crossy-road.htm", file: "", description: "", hide: false },
+  { name: "Hole.io", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMlW3suWkaBR1W6CeL5HulyhTesVP2V4SHNeyRfjro2A&s", link: "https://proxysuniversity.github.io/games/hole-io.html", file: "", description: "", hide: false },
+  { name: "Madness: Project Nexus", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxCcoeF3-DXH_ZAmhOwp-LaEEF4Iij-1tszWcbh7OcWzcirZtgEewXMt8&s=10", link: "https://proxysuniversity.github.io/games/madness-project-nexus.html", file: "", description: "", hide: false },
+  { name: "Slope (2 Player)", image: "https://slope-1.io/data/image/game/slope-2-player/slope-2-player.png", link: "https://proxysuniversity.github.io/games/slope-2-player.html", file: "", description: "Can't find this barley anywhere else, it will always be on Aaron Carter's Arcade!", hide: false },
+  { name: "Stick Fighter", image: "https://stickfighter.io/images/stick-fighter.jpg", link: "https://proxysuniversity.github.io/games/stick-fighter.html", file: "", description: "", hide: false },
+  { name: "Plants Vs Zombies", image: "https://static0.srcdn.com/wordpress/wp-content/uploads/2017/11/Plants-vs-Zombies-Logo.jpg?w=1200&h=675&fit=crop", link: "https://proxysuniversity.github.io/games/plants-vs-zombies.html", file: "", description: "", hide: false },
+  { name: "Football Legends", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQQ2z1Uu97JUPXXDsWqPFjaC4-Yv5B4L4DX6hKeYDpyb1Mtj_9lNkiq-E&s=10", link: "https://proxysuniversity.github.io/games/football-legends.html", file: "", description: "", hide: false },
+  { name: "Rooftop Snipers", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShgx9Qdcjg31MGwZordSKwyqw5zhOHYChdJ7OprX3tcsM4aRunyIn_x4qn&s=10", link: "https://proxysuniversity.github.io/games/rooftop-snipers.htm", file: "", description: "", hide: false },
+  { name: "Brotato", image: "https://images6.alphacoders.com/135/1358945.png", link: "https://bluegamemc.github.io/BrotatoWeb/", file: "", description: "", hide: false },
+  { name: "Boxing Random", image: "https://imgs.crazygames.com/games/boxing-random/cover-1622139160089.jpeg?metadata=none&quality=100&width=1200&height=630&fit=crop", link: "https://proxysuniversity.github.io/games/boxing-random.htm", file: "", description: "", hide: false },
+  { name: "Soccer Random", image: "https://dino-chrome.com/soccer-random-game/4.jpg", link: "https://proxysuniversity.github.io/games/soccer-random.htm", file: "", description: "", hide: false },
+  { name: "Volley Random", image: "https://images.sftcdn.net/images/t_app-cover-s,f_auto/p/75c22f11-deaf-4726-a0eb-1ce5c8490f8f/4140613165/volley-random-screenshot.webp", link: "https://proxysuniversity.github.io/games/volley-random.html", file: "", description: "", hide: false },
+  { name: "Run", image: "https://preview.redd.it/pc-2005-2010-flash-game-like-run-sets-in-space-v0-ikzm5620elod1.jpeg?auto=webp&s=cbc476d4e533fc93ca1c59091d2b3b789ddc8710", link: "https://proxysuniversity.github.io/games/run.html", file: "", description: "", hide: false },
+  { name: "Red Ball 4 (Volume 1)", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyEhrjdA4OmkBoBTjCNH_0LpIWvHDIneUJsbAng1XKIMtWzY2z0a90AIQ&s=10", link: "https://proxysuniversity.github.io/games/red-ball-4-vol-1.html", file: "", description: "", hide: false },
+  { name: "World Hardest Game", image: "https://www.coolmathgames.com/sites/default/files/WorldsHardestGame_OG-logo.jpg", link: "https://proxysuniversity.github.io/games/worlds-hardest-game.html", file: "", description: "", hide: false },
+  { name: "Football Bros", image: "https://media.iogames.space/media/images/footballBros_364x208.png", link: "https://proxysuniversity.github.io/games/football-bros.html", file: "", description: "", hide: false },
+  { name: "Basket Bros", image: "https://imgs.crazygames.com/basketbros_16x9/20251107022434/basketbros_16x9-cover?metadata=none&quality=60&height=5638", link: "https://proxysuniversity.github.io/games/basket-bros.html", file: "", description: "", hide: false },
+  { name: "Retro Bowl", image: "https://coolgamesfree.org/data/image/game/retro-bowl-game-avata-at-coolgamesfree.org.jpg", link: "https://proxysuniversity.github.io/games/retro-bowl.html", file: "", description: "", hide: false },
+  { name: "Getaway Shootout", image: "https://www.drifted.com/wp-content/uploads/2023/05/getaway-shootout-570-featured_16_9.jpg", link: "https://bro-two.vercel.app/", file: "", description: "Getaway Shootout is a chaotic, physics-based online and local multiplayer racing and parkour game developed by New Eich Games and released in August 2018.", hide: false },
+  { name: "Sonic Mania Plus", image: "https://assetsio.gnwcdn.com/dhbsh_xuyaazdmr.jpg?width=1600&height=900&fit=crop&quality=100&format=png&enable=upscale&auto=webp", link: "https://vinmannie.github.io/SonicManiaWeb/RSDKv5.html", file: "", description: "(uploader's note: MAIN MENU CRASHES!!!! Press (Esc) to use Dev Menu to access levels.)", hide: false },
+  { name: "Sonic Robo Blast 2", image: "https://srb2wp-data.nyc3.cdn.digitaloceanspaces.com/wp-content/uploads/srb2-title.png", link: "https://vinmannie.github.io/srb2web/", file: "", description: "", hide: false },
+  { name: "Five Nights At Freddy's", image: "https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/fnaf1_cover.png", link: "https://sussygamedeveloper.github.io/FNAF1/", file: "", description: "", hide: false },
+  { name: "Five Nights At Freddy's 2", image: "https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/fnaf2_cover.png", link: "https://sussygamedeveloper.github.io/FNAF2/", file: "", description: "", hide: false },
+  { name: "Five Nights At Freddy's Ultimate Custom Night", image: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/871720/header.jpg?t=1568143255", link: "https://sussygamedeveloper.github.io/UCN-HTML5/", file: "", description: "", hide: false },
+  { name: "Five Nights At Freddy's Sister Location", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/506610/capsule_616x353.jpg?t=1579635985", link: "https://catgenix22.github.io/FNAFSLcat.github.io/", file: "", description: "", hide: false },
+  { name: "Karate Bros", image: "https://lgames.littlegames.io/bgames/game_image/1764960928karate-bros.png", link: "https://proxysuniversity.github.io/games/karate-bros.html", file: "", description: "", hide: false },
+  { name: "Stickman Hook", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOh630CkB9hcGtvg2UzaoHWwBUnL5GhZ0e9BTuBaP0V8BFOPMVm8wFLKk&s=10", link: "https://proxysuniversity.github.io/games/stickman-hook.html", file: "", description: "", hide: false },
+  { name: "Soccer Bros", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu5P_GRj2hHvqfDxBpXbCPganehAGjrn2vtXbDm_iaEA&s", link: "https://proxysuniversity.github.io/games/soccer-bros.html", file: "", description: "", hide: false },
+  { name: "Baseball Bros", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxoDS7IsOMnhLgmNJtiC5Wx9VjOvz9INT8bTL_ciflKPNQP1TwxXSnGWNo&s=10", link: "https://proxysuniversity.github.io/games/baseball-bros.html", file: "", description: "", hide: false },
+  { name: "Wrestle Bros", image: "https://imgs.crazygames.com/wrestle-bros_16x9/20250320082313/wrestle-bros_16x9-cover?metadata=none&quality=60&height=5802", link: "https://proxysuniversity.github.io/games/wrestle-bros.html", file: "", description: "", hide: false },
+  { name: "Football Bros", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyS5GjO6AtZaveU7JvX0kwkqDdsdJjMfdg1GmaTJzhDPvU6eaSQd3CWXSm&s=10", link: "https://proxysuniversity.github.io/games/football-bros.html", file: "", description: "", hide: false },
+  { name: "Ping Pong Chaos", image: "https://imgs.crazygames.com/ping-pong-chaos_16x9/20250414075429/ping-pong-chaos_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop", link: "https://proxysuniversity.github.io/games/ping-pong-chaos.html", file: "", description: "", hide: false },
+  { name: "Stack", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFGGnjPc2HLdWKnKmPAYUUgeLMeDaWJAk6WjnGWXXAQWNMLB5IyxaUjeU&s=10", link: "https://proxysuniversity.github.io/games/stack.html", file: "", description: "", hide: false },
+  { name: "3D Free Kick", image: "https://imgs.crazygames.com/games/free-kick-classic/cover_16x9-1732743773302.png?metadata=none&quality=60&height=5736", link: "https://proxysuniversity.github.io/games/3d-free-kick.html", file: "", description: "", hide: false },
+  { name: "Dreadhead Parkour", image: "https://i.ytimg.com/vi/_bxWHYcv4UA/maxresdefault.jpg", link: "https://proxysuniversity.github.io/games/dreadhead-parkour.htm", file: "", description: "", hide: false },
+  { name: "Friday Night Funkin' VS Whitty", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC3zkyAVtD-3qrAmD2bW__77CfJeSLBoIB_7nwEPYB9BzUdpBaSAJt9Nh2&s=10", link: "https://juicekidd.github.io/funkin/whitty/index.html", file: "", description: "", hide: false },
+  { name: "Friday Night Funkin' VS Hex", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnyYPCaiv67x37cVPp40JwfjAu5PR458zs1D4lncIdOxEGFCVAXifry4w&s=10", link: "https://vackyton.github.io/snipersite/hex/index.html", file: "", description: "", hide: false },
+  { name: "Friday Night Funkin' VS Impostor (Version 3)", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoBMov8D1rSgdYvcWL_wEtlPK7RMz1uUJv8fMwMdheFg5kKO-92ccC9fek&s=10", link: "https://twastinfg.github.io/FNF-Online-23/impostor-v3/", file: "", description: "", hide: false },
+  { name: "Friday Night Funkin' (Mobile)", image: "https://external-preview.redd.it/by-the-way-friday-night-funkin-has-a-kickstarter-now-the-v0-RDylzmdyJWz9ylxIBF3VqJQMKTZYklSIiULSntgHyms.png?width=640&crop=smart&auto=webp&s=472ddca27bfd2fd35fe985b93ff6d9082846bb22", link: "https://luckydog7.github.io/funkinmobile/game/index.html", file: "", description: "(This game is only supported for Mobile Touchscreen and not for PC nor the Keyboard controls)", hide: false },
+  { name: "Minecraft", image: "https://i.redd.it/cr3lvy59zu3d1.png", link: "https://proxysuniversity.github.io/games/Eaglercraft_1.5.2_.html", file: "", description: "", hide: false },
+  { name: "Friday Night Funkin' VS Matt (Wii Funkin')", image: "https://i.ytimg.com/vi/-PwWVpfLZ6A/maxresdefault.jpg", link: "https://xlegends.github.io/moosyu.github.io/fnf/matt/index.html", file: "", description: "", hide: false }
+];
+
+const gameList = document.getElementById("gameList");
+const search = document.getElementById("search");
+const gameCount = document.getElementById("gameCount");
+const noResults = document.getElementById("noResults");
+const sectionTitle = document.getElementById("sectionTitle");
+
+const playerSection = document.getElementById("playerSection");
+const playingTitle = document.getElementById("playingTitle");
+const gameFrame = document.getElementById("gameFrame");
+const gameFile = document.getElementById("gameFile");
+const gameFileFrame = document.getElementById("gameFileFrame");
+const playerMessage = document.getElementById("playerMessage");
+
+let currentGame = null;
+
+function renderGames() {
+  const query = search.value.trim().toLowerCase();
+
+  const visibleGames = games.filter(game => {
+    if (game.hide === true) return false;
+
+    return game.name.toLowerCase().includes(query) ||
+      (game.description || "").toLowerCase().includes(query);
+  });
+
+  gameList.replaceChildren();
+
+  visibleGames.forEach(game => {
+    // Use a DIV instead of an A tag so the browser doesn't preview URLs.
+    const item = document.createElement("div");
+    item.className = "game-item";
+    item.tabIndex = 0;
+    item.setAttribute("role", "button");
+    item.setAttribute("aria-label", "Play " + game.name);
+
+    item.addEventListener("click", () => openGame(game));
+
+    item.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openGame(game);
+      }
+    });
+
+    const thumbnail = document.createElement("img");
+    thumbnail.src = game.image;
+    thumbnail.alt = game.name;
+    thumbnail.loading = "lazy";
+
+    const name = document.createElement("span");
+    name.className = "game-name";
+    name.textContent = game.name;
+
+    item.appendChild(thumbnail);
+    item.appendChild(name);
+
+    if (game.description) {
+      const description = document.createElement("div");
+      description.className = "game-description";
+      description.textContent = game.description;
+      item.appendChild(description);
+    }
+
+    gameList.appendChild(item);
+  });
+
+  gameCount.textContent = visibleGames.length + " games";
+  noResults.style.display = visibleGames.length ? "none" : "block";
+  sectionTitle.textContent = query ? "Search Results" : "Games";
+}
+
+function openGame(game) {
+  currentGame = game;
+
+  playingTitle.textContent = game.name;
+  playerSection.style.display = "block";
+  playerMessage.style.display = "none";
+  gameFrame.style.display = "block";
+  gameFile.style.display = "none";
+
+  gameFrame.src = "about:blank";
+  gameFileFrame.src = "about:blank";
+
+  if (game.file) {
+    gameFrame.style.display = "none";
+    gameFile.style.display = "block";
+    gameFileFrame.src = game.file;
+  } else {
+    gameFrame.src = game.link;
+  }
+
+  playerSection.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+document.getElementById("closeGame").addEventListener("click", () => {
+  playerSection.style.display = "none";
+  gameFrame.src = "about:blank";
+  gameFileFrame.src = "about:blank";
+  currentGame = null;
+});
+
+document.getElementById("fullscreen").addEventListener("click", async () => {
+  const activeFrame = gameFile.style.display === "block"
+    ? gameFile
+    : gameFrame;
+
+  try {
+    if (activeFrame.requestFullscreen) {
+      await activeFrame.requestFullscreen();
+    }
+  } catch (error) {
+    console.warn("Fullscreen could not be opened.", error);
+  }
+});
+
+search.addEventListener("input", renderGames);
+
+renderGames();
+</script>
+
+</body>
+</html>
