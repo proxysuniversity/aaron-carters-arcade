@@ -706,19 +706,37 @@ main { overflow:visible !important; padding-bottom:48px !important; }
   .tile-info { opacity:1; transform:none; background:linear-gradient(transparent,rgba(0,0,0,.92)); }
 }
 [hidden] { display:none !important; }
-#settings-section { width:min(100%,900px); margin:0 auto; }
-.arcade-settings-card { margin:16px 0; padding:20px; border:1px solid #292929; border-radius:14px; background:rgba(17,17,17,.94); }
-.arcade-settings-card h3 { margin:0 0 8px; font-size:17px; }
-.arcade-settings-card p { margin:0; color:#aaa; font-size:13px; line-height:1.6; }
-.arcade-setting-row { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:15px 0; border-top:1px solid #292929; }
-.arcade-setting-row:first-of-type { margin-top:14px; }
-.arcade-setting-copy { min-width:0; }
-.arcade-setting-copy strong { display:block; font-size:14px; }
-.arcade-setting-copy span { display:block; margin-top:4px; color:#999; font-size:12px; line-height:1.4; }
-.arcade-switch { appearance:none; flex:0 0 auto; width:44px; height:25px; margin:0; border:1px solid #555; border-radius:20px; background:#292929; cursor:pointer; position:relative; transition:background .18s,border-color .18s; }
-.arcade-switch::after { content:""; position:absolute; top:3px; left:3px; width:17px; height:17px; border-radius:50%; background:#fff; transition:transform .18s; }
-.arcade-switch:checked { background:#ffc107; border-color:#ffc107; }
-.arcade-switch:checked::after { transform:translateX(19px); background:#000; }
+#settings-section{width:min(100%,1050px);margin:0 auto}
+.arcade-settings-card{margin:18px 0;padding:22px;border:1px solid #292929;border-radius:16px;background:#101010}
+.arcade-settings-card h3{margin:0 0 7px;font-size:18px}.arcade-settings-card>p{margin:0;color:#aaa;font-size:13px;line-height:1.6}
+.arcade-setting-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 0;border-top:1px solid #292929}
+.arcade-setting-row:first-of-type{margin-top:15px}.arcade-setting-copy{min-width:0}.arcade-setting-copy strong{display:block;font-size:14px}
+.arcade-setting-copy span{display:block;margin-top:4px;color:#999;font-size:12px;line-height:1.45}
+.arcade-switch{appearance:none;flex:0 0 auto;width:46px;height:26px;margin:0;border:1px solid #555;border-radius:20px;background:#292929;cursor:pointer;position:relative}
+.arcade-switch:after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .18s}
+.arcade-switch:checked{background:#ffc107;border-color:#ffc107}.arcade-switch:checked:after{transform:translateX(19px);background:#000}
+.arcade-theme-choices{display:flex;gap:10px;margin-top:16px}.arcade-theme-choice{border:1px solid #555;border-radius:10px;padding:11px 18px;background:#1a1a1a;color:#fff;cursor:pointer;font:inherit}
+.arcade-theme-choice[aria-pressed=true]{border-color:#ffc107;box-shadow:0 0 0 1px #ffc107 inset}
+body.arcade-no-animations,body.arcade-no-animations *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+body.arcade-hide-announcements #announcementBar{display:none!important}
+body.arcade-no-custom-cursor .custom-cursor{display:none!important}
+body.arcade-always-show-info #games-grid .tile-info{opacity:1!important;transform:none!important}
+body.arcade-always-show-info #games-grid .tile-art img{filter:brightness(.78)}
+@media(max-width:600px){.arcade-settings-card{padding:17px}.arcade-setting-row{gap:12px}.arcade-theme-choices{flex-wrap:wrap}#arcade-dock{gap:4px;padding:9px 6px}#arcade-dock .dock-button{min-width:0;flex:1;padding:9px 5px;gap:5px;font-size:12px}#arcade-dock .dock-label{font-size:12px}}
+body.arcade-light-mode{background:#f4f4f4!important;color:#151515!important;color-scheme:light}
+body.arcade-light-mode .site-header,body.arcade-light-mode #arcade-dock,body.arcade-light-mode .announcement-bar,body.arcade-light-mode .install-banner{background:#fff!important;color:#151515!important;border-color:#ddd!important}
+body.arcade-light-mode #arcade-dock .dock-button{color:#444!important}
+body.arcade-light-mode #arcade-dock .dock-button:hover,body.arcade-light-mode #arcade-dock .dock-button[aria-current=page]{background:#eee!important;color:#111!important;border-color:#ccc!important}
+body.arcade-light-mode .section-heading h2,body.arcade-light-mode .section-heading p,body.arcade-light-mode .intro,body.arcade-light-mode .bottom-line,body.arcade-light-mode .content-section h2,body.arcade-light-mode .category-card h3,body.arcade-light-mode .category-card p{color:#171717!important}
+body.arcade-light-mode .content-grid{border-color:#ddd!important}
+body.arcade-light-mode .content-tile:not(#games-grid .content-tile),body.arcade-light-mode .category-card,body.arcade-light-mode .arcade-settings-card{background:#fff!important;color:#171717!important;border-color:#ddd!important}
+body.arcade-light-mode .arcade-settings-card p,body.arcade-light-mode .arcade-setting-copy span{color:#666!important}
+body.arcade-light-mode .arcade-setting-row{border-color:#e5e5e5!important}
+body.arcade-light-mode .arcade-theme-choice{background:#f2f2f2;color:#111;border-color:#ccc}
+body.arcade-light-mode .library-search,body.arcade-light-mode input,body.arcade-light-mode select{background:#fff!important;color:#111!important;border-color:#bbb!important}
+body.arcade-light-mode .loading-screen{background:#fff!important;color:#111!important}
+body.arcade-light-mode .loading-message{color:#111!important}
+body.arcade-light-mode .tile-info{color:#fff!important}
 #arcade-dock {
   position:relative; z-index:20; width:100%; display:flex; align-items:center; justify-content:center;
   gap:clamp(8px,2vw,24px); padding:12px 20px; border:0; border-bottom:1px solid #242424;
@@ -738,8 +756,6 @@ main { overflow:visible !important; padding-bottom:48px !important; }
 #arcade-dock .dock-button:nth-child(2) .dock-label::before { content:"Movies"; }
 #arcade-dock .dock-button:nth-child(3) .dock-label::before { content:"Apps"; }
 #arcade-dock .dock-button:nth-child(4) .dock-label::before { content:"Settings"; }
-body.arcade-reduced-motion, body.arcade-reduced-motion * { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
-body.arcade-hide-announcements #announcementBar { display:none !important; }
 @media(max-width:600px) {
   .content-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:11px; }
   .tile-info { padding:10px !important; }
@@ -802,6 +818,12 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
   opacity: 1 !important;
   transform: translateY(0) !important;
 }
+#games-grid.content-grid{grid-template-columns:repeat(auto-fill,minmax(245px,1fr))!important;gap:20px!important}
+#games-grid .tile-link{aspect-ratio:16/10!important}
+#games-grid .tile-info{max-height:100%!important;overflow-y:auto!important;overscroll-behavior:contain;scrollbar-width:thin;padding:40px 16px 16px!important}
+#games-grid .tile-info h3{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+#games-grid .tile-info p{white-space:normal!important;overflow:visible!important;display:block!important;-webkit-line-clamp:unset!important;line-clamp:unset!important}
+@media(max-width:600px){#games-grid.content-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:13px!important}#games-grid .tile-info{padding:30px 10px 10px!important}}
 </style>
 </head>
 <body>
@@ -870,38 +892,19 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
     </div>
   
     <section id="settings-section" aria-labelledby="settings-title" hidden>
-      <div class="section-heading"><div><h2 id="settings-title">Settings</h2><p>Customize your arcade experience.</p></div></div>
+      <div class="section-heading"><div><h2 id="settings-title">Settings</h2><p>Make the arcade work the way you like.</p></div></div>
       <div class="arcade-settings-card">
-        <h3>Preferences</h3>
-        <p>These settings are saved on this device.</p>
-        <label class="arcade-setting-row">
-          <span class="arcade-setting-copy"><strong>Reduce motion</strong><span>Turn off background movement and interface animations.</span></span>
-          <input class="arcade-switch" id="arcade-reduced-motion" type="checkbox" role="switch">
-        </label>
-        <label class="arcade-setting-row">
-          <span class="arcade-setting-copy"><strong>Hide announcements</strong><span>Hide the scrolling announcement bar at the top.</span></span>
-          <input class="arcade-switch" id="arcade-hide-announcements" type="checkbox" role="switch">
-        </label>
-        <label class="arcade-setting-row">
-          <span class="arcade-setting-copy"><strong>Compact cards</strong><span>Fit more game, movie, and app thumbnails on the screen.</span></span>
-          <input class="arcade-switch" id="arcade-compact-cards" type="checkbox" role="switch">
-        </label>
-        <label class="arcade-setting-row">
-          <span class="arcade-setting-copy"><strong>Always show card details</strong><span>Keep titles and descriptions visible without hovering.</span></span>
-          <input class="arcade-switch" id="arcade-always-show-info" type="checkbox" role="switch">
-        </label>
+        <h3>My preferences</h3><p>These choices are saved on this device.</p>
+        <label class="arcade-setting-row"><span class="arcade-setting-copy"><strong>Turn off custom cursor</strong><span>Use your device's normal mouse pointer instead.</span></span><input class="arcade-switch" id="setting-no-custom-cursor" type="checkbox" role="switch"></label>
+        <label class="arcade-setting-row"><span class="arcade-setting-copy"><strong>Turn off all animations entirely</strong><span>Disable motion and transitions throughout the arcade.</span></span><input class="arcade-switch" id="setting-no-animations" type="checkbox" role="switch"></label>
+        <label class="arcade-setting-row"><span class="arcade-setting-copy"><strong>Hide announcements always</strong><span>Keep the announcement strip hidden.</span></span><input class="arcade-switch" id="setting-hide-announcements" type="checkbox" role="switch"></label>
+        <label class="arcade-setting-row"><span class="arcade-setting-copy"><strong>Always show card details</strong><span>Show game titles and descriptions without hovering.</span></span><input class="arcade-switch" id="setting-always-show-details" type="checkbox" role="switch"></label>
       </div>
-      <div class="arcade-settings-card">
-        <h3>Display</h3>
-        <p>Keep the arcade looking the way you like.</p>
-        <label class="arcade-setting-row">
-          <span class="arcade-setting-copy"><strong>Black background</strong><span>Use the arcade's solid black background.</span></span>
-          <input class="arcade-switch" type="checkbox" checked disabled aria-label="Black background is always enabled">
-        </label>
-      </div>
-      <div class="arcade-settings-card">
-        <h3>About</h3>
-        <p>Aaron Carter's Arcade — games, movies, shows, and apps in one place.</p>
+      <div class="arcade-settings-card"><h3>Appearance</h3><p>Choose the arcade's color theme.</p>
+        <div class="arcade-theme-choices" role="group" aria-label="Color theme">
+          <button class="arcade-theme-choice" id="setting-theme-light" type="button" aria-pressed="false">☀️ Light mode</button>
+          <button class="arcade-theme-choice" id="setting-theme-dark" type="button" aria-pressed="true">🌙 Dark mode</button>
+        </div>
       </div>
     </section>
 
@@ -1552,25 +1555,33 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
         if (button.dataset.arcadeTab === name) button.setAttribute('aria-current', 'page');
         else button.removeAttribute('aria-current');
       });
-      window.scrollTo({ top:0, behavior:document.body.classList.contains('arcade-reduced-motion') ? 'auto' : 'smooth' });
+      window.scrollTo({ top:0, behavior:document.body.classList.contains('arcade-no-animations') ? 'auto' : 'smooth' });
     }
     buttons.forEach(button => button.addEventListener('click', () => activateTab(button.dataset.arcadeTab)));
-    const settingControls = [
-      { id:'arcade-reduced-motion', key:'aaron_arcade_reduced_motion', apply:v => document.body.classList.toggle('arcade-reduced-motion', v) },
-      { id:'arcade-hide-announcements', key:'aaron_arcade_hide_announcements', apply:v => document.body.classList.toggle('arcade-hide-announcements', v) },
-      { id:'arcade-compact-cards', key:'aaron_arcade_compact_cards', apply:v => document.body.classList.toggle('arcade-compact-cards', v) },
-      { id:'arcade-always-show-info', key:'aaron_arcade_always_show_info', apply:v => document.body.classList.toggle('arcade-always-show-info', v) }
+    const toggleSettings = [
+      {id:'setting-no-custom-cursor',key:'aaron_arcade_no_custom_cursor',className:'arcade-no-custom-cursor'},
+      {id:'setting-no-animations',key:'aaron_arcade_no_animations',className:'arcade-no-animations'},
+      {id:'setting-hide-announcements',key:'aaron_arcade_hide_announcements',className:'arcade-hide-announcements'},
+      {id:'setting-always-show-details',key:'aaron_arcade_always_show_details',className:'arcade-always-show-info'}
     ];
-    settingControls.forEach(setting => {
-      const control = document.getElementById(setting.id);
-      if (!control) return;
-      try { control.checked = localStorage.getItem(setting.key) === 'true'; } catch (_) {}
-      setting.apply(control.checked);
-      control.addEventListener('change', () => {
-        setting.apply(control.checked);
-        try { localStorage.setItem(setting.key, String(control.checked)); } catch (_) {}
+    toggleSettings.forEach(setting=>{
+      const control=document.getElementById(setting.id); if(!control)return;
+      try{control.checked=localStorage.getItem(setting.key)==='true'}catch(_){}
+      document.body.classList.toggle(setting.className,control.checked);
+      control.addEventListener('change',()=>{
+        document.body.classList.toggle(setting.className,control.checked);
+        try{localStorage.setItem(setting.key,String(control.checked))}catch(_){}
       });
     });
+    const themeButtons=[{id:'setting-theme-light',theme:'light'},{id:'setting-theme-dark',theme:'dark'}];
+    function setArcadeTheme(theme){
+      document.body.classList.toggle('arcade-light-mode',theme==='light');
+      themeButtons.forEach(item=>{const btn=document.getElementById(item.id);if(btn)btn.setAttribute('aria-pressed',String(item.theme===theme))});
+      try{localStorage.setItem('aaron_arcade_theme',theme)}catch(_){}
+    }
+    let savedTheme='dark';try{savedTheme=localStorage.getItem('aaron_arcade_theme')||'dark'}catch(_){}
+    setArcadeTheme(savedTheme==='light'?'light':'dark');
+    themeButtons.forEach(item=>{const btn=document.getElementById(item.id);if(btn)btn.addEventListener('click',()=>setArcadeTheme(item.theme))});
     activateTab('games');
   })();
   </script>
