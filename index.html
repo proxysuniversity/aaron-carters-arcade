@@ -45,17 +45,7 @@
     }
     a { color: inherit; text-decoration: none; }
 
-    /* Every visible element gently follows the pointer. */
-    body * {
-      --cursor-x: 0px;
-      --cursor-y: 0px;
-      transition: translate 180ms cubic-bezier(.2,.7,.2,1);
-      will-change: translate;
-    }
-    .brand img {
-      --cursor-x: 0px;
-      --cursor-y: 0px;
-    }
+    /* Avoid expensive transitions and GPU layers on every element. */
     .announcement-bar {
       width: 100%;
       height: 36px;
@@ -734,9 +724,19 @@ body.arcade-always-show-info #games-grid .tile-art img{filter:brightness(.78)}
 #favorite-games-list{display:grid;gap:8px;margin-top:12px}
 .favorite-game-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #333}
 .favorite-toggle{position:absolute;z-index:2;right:9px;top:9px;border:1px solid #777;border-radius:50%;width:34px;height:34px;background:#111;color:#fff;cursor:pointer;font-size:18px}
+.arcade-reset-area{margin:28px 0 10px;padding:24px;border:1px solid #444;border-radius:16px;background:#111}
+.arcade-reset-area h3{margin:0 0 8px;font-size:20px}
+.arcade-reset-area>p{color:#aaa;font-size:13px;line-height:1.5}
+.arcade-reset-button{display:block;width:100%;min-height:76px;margin:18px 0 8px;padding:20px;border:2px solid;border-radius:14px;font:inherit;font-size:clamp(19px,3vw,25px);font-weight:900;letter-spacing:.02em;cursor:pointer}
+.arcade-reset-button.remove-changes{background:#242424;color:#fff;border-color:#888}
+.arcade-reset-button.factory-reset{background:#4a1010;color:#fff;border-color:#e34b4b}
+.arcade-reset-button:active{transform:scale(.99)}
+.arcade-reset-note{margin:0 0 16px}
+body.arcade-light-mode .arcade-reset-area{background:#fff;border-color:#ccc}
+body.arcade-light-mode .arcade-reset-area>p{color:#555}
 .content-tile{position:relative}
-body.arcade-custom-wallpaper{background-size:cover!important;background-position:center!important;background-attachment:fixed!important;background-repeat:no-repeat!important}
-body.arcade-custom-wallpaper:before{content:"";position:fixed;inset:0;background:rgba(0,0,0,.72);pointer-events:none;z-index:-1}
+html.arcade-custom-wallpaper{background-size:cover!important;background-position:center!important;background-attachment:fixed!important;background-repeat:no-repeat!important}
+html.arcade-custom-wallpaper body{background:transparent!important}
 body.arcade-custom-font,body.arcade-custom-font *{font-family:ArcadeUploadedFont,sans-serif!important}
 body.arcade-browser-font,body.arcade-browser-font *{font-family:Arial,Helvetica,sans-serif!important}
 :root{--arcade-user-color:#ffc107}
@@ -938,40 +938,15 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
         <label class="arcade-field">Browser tab name<input id="tab-name" type="text" maxlength="70" placeholder="My Arcade"></label>
         <button type="button" class="arcade-theme-choice" id="save-site-identity">Save favicon and tab name</button>
       </div>
-      <div class="arcade-settings-card"><h3>Arcade tools</h3>
-        <button type="button" class="arcade-theme-choice" id="reset-arcade-settings">Reset all settings</button>
-        <div class="arcade-counts" id="arcade-counts"></div>
-      </div>
+      <div class="arcade-settings-card"><h3>Arcade stats</h3><div class="arcade-counts" id="arcade-counts"></div></div>
       <div class="arcade-settings-card"><h3>Favorites</h3><p>Save games you want to find again.</p><div id="favorite-games-list"></div></div>
-      <div class="arcade-settings-card"><h3>Debug Mode / Arcade Editor</h3><p>Turn the editor on when you want to customize your arcade. Your changes are saved in this browser.</p>
-        <label class="arcade-setting-row"><span class="arcade-setting-copy"><strong>Debug Mode</strong><span>Show or hide all advanced editing tools.</span></span><input class="arcade-switch" id="debug-mode-switch" type="checkbox" role="switch"></label>
-        <div id="debug-panel" hidden>
-          <div class="debug-status" id="debug-save-status" role="status">Ready</div>
-          <div class="debug-toolbar"><button type="button" class="arcade-theme-choice" id="debug-export">Export backup</button><button type="button" class="arcade-theme-choice" id="debug-import-button">Import backup</button><input id="debug-import-file" type="file" accept="application/json,.json" hidden><button type="button" class="arcade-theme-choice" id="debug-restore-site">Restore original site look</button></div>
-          <h4>Website editor</h4>
-          <label class="arcade-field">Website name<input id="debug-site-name" type="text" maxlength="70"></label>
-          <label class="arcade-field">Website logo image URL<input id="debug-logo-url" type="url" placeholder="https://example.com/logo.png"></label>
-          <label class="arcade-field">Browser tab name<input id="debug-tab-name" type="text" maxlength="70"></label>
-          <label class="arcade-field">Favicon image URL<input id="debug-favicon-url" type="url"></label>
-          <label class="arcade-field">Accent color<input id="debug-accent" type="color" value="#ffc107"></label>
-          <label class="arcade-field">Background image URL<input id="debug-background" type="url" placeholder="https://example.com/background.jpg"></label>
-          <button type="button" class="arcade-theme-choice" id="debug-save-site">Apply website changes</button>
-          <h4>Content editor</h4>
-          <label class="arcade-field">Section<select id="debug-content-type"><option value="games">Games</option><option value="movies">Movies &amp; Shows</option><option value="apps">Apps</option></select></label>
-          <label class="arcade-field">Choose an entry<select id="debug-entry-select"></select></label>
-          <div class="debug-toolbar"><button type="button" class="arcade-theme-choice" id="debug-new-entry">New entry</button><button type="button" class="arcade-theme-choice" id="debug-duplicate-entry">Duplicate entry</button><button type="button" class="arcade-theme-choice" id="debug-delete-entry">Delete custom entry</button></div>
-          <label class="arcade-field">Title / game name<input id="debug-entry-title" type="text" maxlength="120"></label>
-          <label class="arcade-field">Thumbnail image URL<input id="debug-entry-image" type="url" placeholder="https://example.com/thumbnail.png"></label>
-          <label class="arcade-field">Description<textarea id="debug-entry-description" rows="3" maxlength="1200"></textarea></label>
-          <label class="arcade-field">Destination / game URL<input id="debug-entry-link" type="url" placeholder="https://example.com/game"></label>
-          <label class="arcade-field">Or upload a thumbnail<input id="debug-entry-image-file" type="file" accept="image/*"></label>
-          <label class="arcade-setting-row"><span class="arcade-setting-copy"><strong>Hide this entry</strong><span>Keep it saved without showing it on the arcade.</span></span><input id="debug-entry-hidden" type="checkbox" class="arcade-switch"></label>
-          <button type="button" class="arcade-theme-choice" id="debug-save-entry">Save entry</button>
-          <button type="button" class="arcade-theme-choice" id="debug-preview-entry">Preview / refresh website</button>
-          <h4>Storage and safety</h4>
-          <p id="debug-storage-status">Checking browser storage support…</p>
-          <button type="button" class="arcade-theme-choice" id="debug-save-now">Save everything now</button>
-        </div>
+      <div class="arcade-reset-area">
+        <h3>Reset &amp; cleanup</h3>
+        <p>Choose how much of your saved arcade data you want to clear.</p>
+        <button type="button" class="arcade-reset-button remove-changes" id="remove-all-changes">Remove All Changes</button>
+        <p class="arcade-reset-note">Restores the original arcade content and appearance. Your favorites stay saved.</p>
+        <button type="button" class="arcade-reset-button factory-reset" id="factory-reset">Factory Reset</button>
+        <p class="arcade-reset-note">Erases all arcade settings, favorites, custom edits, uploaded images and saved arcade data on this browser. Game progress stored on other websites is not controlled by this arcade.</p>
       </div>
     </section>
 
@@ -1013,51 +988,7 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
   </div>
   <div class="custom-cursor" aria-hidden="true"><img class="cursor-arrow" src="data:image/png;base64,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" alt=""><img class="cursor-hand" src="data:image/png;base64,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" alt=""></div>
   <script>
-    (() => {
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const finePointer = window.matchMedia('(pointer: fine)').matches;
-      if (reduceMotion || !finePointer) return;
-
-      const elements = [...document.body.querySelectorAll('*')]
-        .filter(el => !['SCRIPT', 'STYLE'].includes(el.tagName));
-      let frame = 0;
-      let pointerX = innerWidth / 2;
-      let pointerY = innerHeight / 2;
-
-      function moveElements() {
-        frame = 0;
-        const nx = (pointerX / Math.max(innerWidth, 1) - 0.5) * 2;
-        const ny = (pointerY / Math.max(innerHeight, 1) - 0.5) * 2;
-        elements.forEach((el, index) => {
-          const rect = el.getBoundingClientRect();
-          if (!rect.width && !rect.height) return;
-          // Small, varied movement gives each element its own subtle depth.
-          const depth = 1.1 + (index % 5) * 0.42;
-          const localX = ((pointerX - (rect.left + rect.width / 2)) / Math.max(innerWidth, 1));
-          const localY = ((pointerY - (rect.top + rect.height / 2)) / Math.max(innerHeight, 1));
-          const x = Math.max(-3.5, Math.min(3.5, nx * depth - localX * 1.4));
-          const y = Math.max(-3.5, Math.min(3.5, ny * depth - localY * 1.4));
-          el.style.setProperty('--cursor-x', x.toFixed(2) + 'px');
-          el.style.setProperty('--cursor-y', y.toFixed(2) + 'px');
-          if (el !== document.querySelector('.brand img')) {
-            el.style.translate = `var(--cursor-x) var(--cursor-y)`;
-          }
-        });
-      }
-
-      window.addEventListener('pointermove', event => {
-        pointerX = event.clientX;
-        pointerY = event.clientY;
-        if (!frame) frame = requestAnimationFrame(moveElements);
-      }, { passive: true });
-      window.addEventListener('pointerleave', () => {
-        elements.forEach(el => {
-          el.style.setProperty('--cursor-x', '0px');
-          el.style.setProperty('--cursor-y', '0px');
-          if (el !== document.querySelector('.brand img')) el.style.translate = '0px 0px';
-        });
-      });
-    })();
+    // Whole-page pointer parallax removed to keep scrolling and interaction responsive.
 
     // ================================================================
     // EASY EDIT SETTINGS — change messages and general text here.
@@ -1703,8 +1634,6 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
     function applyIdentity(){
       const title=load('tab_name');if(title)document.title=title;
       const icon=load('favicon');if(icon){let link=document.querySelector('link[rel~="icon"]');if(!link){link=document.createElement('link');link.rel='icon';document.head.appendChild(link)}link.href=icon}
-      const logo=load('debug_logo');if(logo)document.querySelectorAll('.brand img,.loading-logo').forEach(img=>img.src=logo);
-      const siteName=load('debug_site_name');if(siteName){const header=document.querySelector('.brand');if(header)header.setAttribute('aria-label',siteName)}
     }
     function readImage(file,callback){if(!file||!/^image\/(jpeg|png|gif)$/.test(file.type)){alert('Choose a JPG, PNG, or GIF image.');return}const reader=new FileReader();reader.onload=()=>callback(String(reader.result));reader.readAsDataURL(file)}
     function renderFavorites(){
@@ -1713,9 +1642,29 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
       target.querySelectorAll('[data-remove-favorite]').forEach(btn=>btn.addEventListener('click',()=>{const next=saved.filter(x=>x!==btn.dataset.removeFavorite);store('favorites',JSON.stringify(next));renderFavorites();renderContent(games,'games-grid','games')}));
     }
     const counts=$('arcade-counts');if(counts)counts.innerHTML='<span>🎮 Games: '+games.filter(x=>!x.hide&&x.name).length+'</span><span>🎬 Movies: '+movies.filter(x=>!x.hide&&(x.title||x.name)).length+'</span><span>🧩 Apps: '+apps.filter(x=>!x.hide&&(x.name||x.title)).length+'</span>';
-    const wallpaper=$('wallpaper-file');if(wallpaper)wallpaper.addEventListener('change',()=>readImage(wallpaper.files[0],data=>{store('wallpaper',data);document.body.style.backgroundImage='url("'+data+'")';document.body.classList.add('arcade-custom-wallpaper')}));
-    const savedWallpaper=load('wallpaper');if(savedWallpaper){document.body.style.backgroundImage='url("'+savedWallpaper+'")';document.body.classList.add('arcade-custom-wallpaper')}
-    $('clear-wallpaper')?.addEventListener('click',()=>{localStorage.removeItem('aaron_arcade_wallpaper');document.body.style.backgroundImage='';document.body.classList.remove('arcade-custom-wallpaper')});
+    function applyWallpaper(data){
+      const root=document.documentElement;
+      if(data){
+        root.style.backgroundImage='url("'+data+'")';
+        root.classList.add('arcade-custom-wallpaper');
+        document.body.classList.add('arcade-custom-wallpaper');
+      }else{
+        root.style.backgroundImage='';
+        root.classList.remove('arcade-custom-wallpaper');
+        document.body.classList.remove('arcade-custom-wallpaper');
+      }
+    }
+    const wallpaper=$('wallpaper-file');
+    if(wallpaper)wallpaper.addEventListener('change',()=>readImage(wallpaper.files[0],data=>{
+      try{store('wallpaper',data);applyWallpaper(data)}
+      catch(_){alert('This image could not be saved. Try a smaller image file.')}
+    }));
+    applyWallpaper(load('wallpaper'));
+    $('clear-wallpaper')?.addEventListener('click',()=>{
+      localStorage.removeItem('aaron_arcade_wallpaper');
+      if(wallpaper)wallpaper.value='';
+      applyWallpaper('');
+    });
     const color=$('site-color');color.value=load('site_color','#ffc107');document.documentElement.style.setProperty('--arcade-user-color',color.value);color.addEventListener('input',()=>{document.documentElement.style.setProperty('--arcade-user-color',color.value);store('site_color',color.value)});
     const fontMode=$('font-mode');fontMode.value=load('font_mode','site');function applyFont(){document.body.classList.toggle('arcade-browser-font',fontMode.value==='browser');document.body.classList.toggle('arcade-custom-font',fontMode.value==='upload'&&!!load('font_data'));}fontMode.addEventListener('change',()=>{store('font_mode',fontMode.value);applyFont()});applyFont();
     $('font-file').addEventListener('change',()=>{const file=$('font-file').files[0];if(!file)return;if(!/\.(woff2?|ttf|otf)$/i.test(file.name)){alert('Choose a WOFF, WOFF2, TTF, or OTF font.');return}const reader=new FileReader();reader.onload=()=>{store('font_data',String(reader.result));let style=$('uploaded-font-style');if(!style){style=document.createElement('style');style.id='uploaded-font-style';document.head.appendChild(style)}style.textContent='@font-face{font-family:ArcadeUploadedFont;src:url("'+reader.result+'")}';fontMode.value='upload';store('font_mode','upload');applyFont()};reader.readAsDataURL(file)});
@@ -1723,43 +1672,33 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
     $('favicon-url').value=load('favicon_url');$('tab-name').value=load('tab_name');
     $('favicon-file').addEventListener('change',()=>readImage($('favicon-file').files[0],data=>{store('favicon',data);store('favicon_url','');applyIdentity()}));
     $('save-site-identity').addEventListener('click',()=>{const url=$('favicon-url').value.trim();if(url){store('favicon',url);store('favicon_url',url)}const name=$('tab-name').value.trim();store('tab_name',name);applyIdentity()});
-    $('reset-arcade-settings').addEventListener('click',()=>{if(!confirm('Reset all arcade settings saved in this browser?'))return;Object.keys(localStorage).filter(k=>k.startsWith('aaron_arcade_')).forEach(k=>localStorage.removeItem(k));location.reload()});
-    // Apply locally saved game-name overrides before rendering is refreshed.
-    try{const overrides=JSON.parse(load('debug_game_names','{}'));Object.entries(overrides).forEach(([idx,name])=>{if(games[Number(idx)])games[Number(idx)].name=name})}catch(_){}
+    function deleteArcadeEditorDatabase(){
+      return new Promise(resolve=>{
+        if(!('indexedDB' in window)){resolve();return}
+        const request=indexedDB.deleteDatabase('aaron_arcade_editor_v2');
+        request.onsuccess=request.onerror=request.onblocked=()=>resolve();
+      });
+    }
+    async function clearArcadeData(keepFavorites){
+      const favorites=keepFavorites?localStorage.getItem('aaron_arcade_favorites'):null;
+      Object.keys(localStorage).filter(key=>key.startsWith('aaron_arcade_')&&!(keepFavorites&&key==='aaron_arcade_favorites')).forEach(key=>localStorage.removeItem(key));
+      try{Object.keys(sessionStorage).filter(key=>key.startsWith('aaron_arcade_')).forEach(key=>sessionStorage.removeItem(key))}catch(_){}
+      await deleteArcadeEditorDatabase();
+      if(keepFavorites&&favorites!==null)localStorage.setItem('aaron_arcade_favorites',favorites);
+    }
+    $('remove-all-changes').addEventListener('click',async()=>{
+      if(!confirm('Remove all arcade changes and restore the original site? Your favorites will be kept.'))return;
+      await clearArcadeData(true);
+      location.reload();
+    });
+    $('factory-reset').addEventListener('click',async()=>{
+      if(!confirm('FACTORY RESET: permanently erase all saved arcade settings, favorites, custom content and uploaded files from this browser?'))return;
+      if(!confirm('Are you absolutely sure? This cannot be undone.'))return;
+      await clearArcadeData(false);
+      location.reload();
+    });
     renderContent(games,'games-grid','games');renderContent(movies,'movies-grid','movies');renderContent(apps,'apps-grid','apps');
 
-    // Durable editor data: IndexedDB has no short idle timeout and supports large uploads.
-    const DB_NAME='aaron_arcade_editor_v2', DB_STORE='saved';
-    function openEditorDB(){return new Promise((resolve,reject)=>{if(!('indexedDB'in window)){reject(new Error('IndexedDB unavailable'));return}const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(DB_STORE))req.result.createObjectStore(DB_STORE)};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
-    async function dbWrite(key,value){const db=await openEditorDB();return new Promise((resolve,reject)=>{const tx=db.transaction(DB_STORE,'readwrite');tx.objectStore(DB_STORE).put(value,key);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>{db.close();reject(tx.error)}})}
-    async function dbRead(key){const db=await openEditorDB();return new Promise((resolve,reject)=>{const tx=db.transaction(DB_STORE,'readonly');const req=tx.objectStore(DB_STORE).get(key);req.onsuccess=()=>{db.close();resolve(req.result)};req.onerror=()=>{db.close();reject(req.error)}})}
-    const setSaveStatus=msg=>{const el=$('debug-save-status');if(el)el.textContent=msg};
-    async function saveEditorData(){try{await dbWrite('content',{games,movies,apps});setSaveStatus('✓ Saved in this browser storage.');return true}catch(e){setSaveStatus('Could not save to IndexedDB: '+e.message);return false}}
-    function refreshAllContent(){renderContent(games,'games-grid','games');renderContent(movies,'movies-grid','movies');renderContent(apps,'apps-grid','apps');if($('arcade-counts'))$('arcade-counts').innerHTML='<span>🎮 Games: '+games.filter(x=>!x.hide&&(x.name||x.title)).length+'</span><span>🎬 Movies: '+movies.filter(x=>!x.hide&&(x.title||x.name)).length+'</span><span>🧩 Apps: '+apps.filter(x=>!x.hide&&(x.name||x.title)).length+'</span>';renderFavorites()}
-    function getCollection(){return $('debug-content-type').value==='movies'?movies:$('debug-content-type').value==='apps'?apps:games}
-    function titleOf(item,type){return item?(item.name||item.title||'Untitled '+type):''}
-    function setTitle(item,type,value){if(type==='movies')item.title=value;else item.name=value}
-    let selectedEntryIndex=-1;
-    function populateEntrySelect(){const list=getCollection();$('debug-entry-select').innerHTML=list.map((item,i)=>'<option value="'+i+'">'+(item.hide?'[Hidden] ':'')+escapeHTML(titleOf(item,$('debug-content-type').value)||('Entry '+(i+1)))+'</option>').join('');if(!list.length){selectedEntryIndex=-1;return}if(selectedEntryIndex<0||selectedEntryIndex>=list.length)selectedEntryIndex=0;$('debug-entry-select').value=String(selectedEntryIndex);loadEntryIntoEditor()}
-    function loadEntryIntoEditor(){const type=$('debug-content-type').value,list=getCollection(),idx=Number($('debug-entry-select').value),item=list[idx];selectedEntryIndex=Number.isInteger(idx)?idx:-1;if(!item)return;$('debug-entry-title').value=titleOf(item,type);$('debug-entry-image').value=item.image||'';$('debug-entry-description').value=item.description||'';$('debug-entry-link').value=type==='movies'?(item.googleDriveVideo||item.link||''):(item.link||item.file||'');$('debug-entry-hidden').checked=!!item.hide}
-    $('debug-mode-switch').checked=load('debug_enabled')==='true';
-    $('debug-panel').hidden=!$('debug-mode-switch').checked;
-    $('debug-mode-switch').addEventListener('change',()=>{const on=$('debug-mode-switch').checked;$('debug-panel').hidden=!on;store('debug_enabled',String(on));if(on){$('debug-site-name').value=load('debug_site_name');$('debug-logo-url').value=load('debug_logo');$('debug-tab-name').value=load('tab_name');$('debug-favicon-url').value=load('favicon');$('debug-accent').value=load('site_color','#ffc107');$('debug-background').value=load('debug_background');populateEntrySelect()}});
-    $('debug-content-type').addEventListener('change',()=>{selectedEntryIndex=-1;populateEntrySelect()});
-    $('debug-entry-select').addEventListener('change',loadEntryIntoEditor);
-    $('debug-new-entry').addEventListener('click',()=>{const type=$('debug-content-type').value,list=getCollection(),item=type==='movies'?{title:'New movie',image:'',googleDriveVideo:'',link:'',description:'',hide:false,_arcadeCustom:true}:{name:'New '+(type==='games'?'game':'app'),image:'',link:'',file:'',description:'',hide:false,_arcadeCustom:true};list.push(item);selectedEntryIndex=list.length-1;populateEntrySelect();setSaveStatus('New draft created. Fill it out and save.')});
-    $('debug-duplicate-entry').addEventListener('click',()=>{const list=getCollection(),item=list[Number($('debug-entry-select').value)];if(!item)return;const copy={...item,_arcadeCustom:true};setTitle(copy,$('debug-content-type').value,titleOf(item,$('debug-content-type').value)+' (copy)');list.push(copy);selectedEntryIndex=list.length-1;populateEntrySelect();saveEditorData()});
-    $('debug-delete-entry').addEventListener('click',()=>{const list=getCollection(),idx=Number($('debug-entry-select').value),item=list[idx];if(!item)return;if(!item._arcadeCustom){alert('Original built-in entries cannot be permanently deleted here. Use Hide this entry instead.');return}if(!confirm('Delete this custom entry?'))return;list.splice(idx,1);selectedEntryIndex=-1;populateEntrySelect();saveEditorData();refreshAllContent()});
-    $('debug-entry-image-file').addEventListener('change',()=>{const file=$('debug-entry-image-file').files[0];if(!file)return;if(!file.type.startsWith('image/')){alert('Choose an image file.');return}const reader=new FileReader();reader.onload=()=>{$('debug-entry-image').value=String(reader.result);setSaveStatus('Image ready. Save the entry to keep it.')};reader.readAsDataURL(file)});
-    $('debug-save-entry').addEventListener('click',async()=>{const type=$('debug-content-type').value,list=getCollection(),idx=Number($('debug-entry-select').value),item=list[idx];if(!item)return;const title=$('debug-entry-title').value.trim();if(!title){alert('Add a title first.');return}setTitle(item,type,title);item.image=$('debug-entry-image').value.trim();item.description=$('debug-entry-description').value.trim();item.hide=$('debug-entry-hidden').checked;const url=$('debug-entry-link').value.trim();if(type==='movies'){item.googleDriveVideo=url;item.link=url}else{item.link=url;item.file=''}item._arcadeCustom=!!item._arcadeCustom;await saveEditorData();populateEntrySelect();refreshAllContent()});
-    $('debug-preview-entry').addEventListener('click',()=>{refreshAllContent();setSaveStatus('Preview refreshed. Remember to save the entry to keep edits.')});
-    $('debug-save-site').addEventListener('click',()=>{store('debug_site_name',$('debug-site-name').value.trim());store('debug_logo',$('debug-logo-url').value.trim());store('tab_name',$('debug-tab-name').value.trim());store('favicon',$('debug-favicon-url').value.trim());store('site_color',$('debug-accent').value);store('debug_background',$('debug-background').value.trim());applyIdentity();document.documentElement.style.setProperty('--arcade-user-color',$('debug-accent').value);if($('debug-background').value.trim())document.body.style.backgroundImage='url("'+$('debug-background').value.trim().replace(/["\\\\]/g,'')+'")';setSaveStatus('Website changes applied and saved.')});
-    $('debug-restore-site').addEventListener('click',()=>{if(!confirm('Restore the original website appearance? Your games and custom content will stay.'))return;['debug_site_name','debug_logo','tab_name','favicon','site_color','debug_background'].forEach(k=>localStorage.removeItem('aaron_arcade_'+k));location.reload()});
-    $('debug-save-now').addEventListener('click',saveEditorData);
-    $('debug-export').addEventListener('click',async()=>{await saveEditorData();const payload={version:2,exportedAt:new Date().toISOString(),content:{games,movies,apps},settings:Object.fromEntries(Object.keys(localStorage).filter(k=>k.startsWith('aaron_arcade_')).map(k=>[k,localStorage.getItem(k)]))};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='aaron-arcade-backup.json';a.click();URL.revokeObjectURL(url)});
-    $('debug-import-button').addEventListener('click',()=>$('debug-import-file').click());
-    $('debug-import-file').addEventListener('change',async()=>{const file=$('debug-import-file').files[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!data.content||!Array.isArray(data.content.games)||!Array.isArray(data.content.movies)||!Array.isArray(data.content.apps))throw new Error('This is not a valid arcade backup.');for(const key of ['games','movies','apps']){const target=key==='games'?games:key==='movies'?movies:apps;target.splice(0,target.length,...data.content[key])}if(data.settings)Object.entries(data.settings).forEach(([k,v])=>{if(k.startsWith('aaron_arcade_'))localStorage.setItem(k,String(v))});await saveEditorData();refreshAllContent();populateEntrySelect();alert('Backup imported successfully.')}catch(e){alert('Import failed: '+e.message)}});
-    (async()=>{try{if(navigator.storage?.persist){const granted=await navigator.storage.persist();$('debug-storage-status').textContent=granted?'Persistent browser storage is enabled.':'Browser storage is saved normally; this browser did not grant persistent-storage protection.'}const saved=await dbRead('content');if(saved){for(const key of ['games','movies','apps']){const target=key==='games'?games:key==='movies'?movies:apps;if(Array.isArray(saved[key]))target.splice(0,target.length,...saved[key])}}await saveEditorData();refreshAllContent();if($('debug-mode-switch').checked)populateEntrySelect()}catch(e){$('debug-storage-status').textContent='IndexedDB unavailable; browser local settings still work. '+e.message}})();
     applyIdentity();renderFavorites();
     activateTab('games');
   })();
