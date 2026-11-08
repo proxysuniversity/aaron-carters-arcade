@@ -651,6 +651,90 @@
     .coming-soon { color:#c7c7c7 !important; }
     .coming-soon::before { background:#fff !important; box-shadow:0 0 10px rgba(255,255,255,.35) !important; }
 
+
+/* Rulex Arcade-inspired redesign for Aaron Carter's Arcade */
+:root { --rulex-bg:#050505; --rulex-panel:#111; --rulex-line:#292929; --rulex-text:#f5f5f5; }
+html, body { min-height:100%; background-color:var(--rulex-bg) !important; }
+body {
+  background-image:
+    linear-gradient(90deg, rgba(40,40,40,.36) 1px, transparent 1px),
+    linear-gradient(rgba(40,40,40,.36) 1px, transparent 1px) !important;
+  background-size:40px 40px !important;
+  animation: rulexGridFlow 12s linear infinite;
+  padding-bottom:104px;
+}
+@keyframes rulexGridFlow { from { background-position:0 0; } to { background-position:40px 80px; } }
+.site-header { background:rgba(5,5,5,.94) !important; backdrop-filter:blur(10px); }
+main { overflow:visible !important; padding-bottom:120px !important; }
+.global-search-section { width:min(100%,900px); margin:20px auto 28px; }
+.library-search { background:#111 !important; border:1px solid #333 !important; border-radius:10px !important; }
+.sections-layout { display:block !important; width:100%; max-width:1500px; }
+.content-section { width:100%; margin:0 0 44px; }
+.section-heading { align-items:center; margin-bottom:14px; }
+.section-heading h2 { font-size:clamp(24px,3vw,32px); text-transform:capitalize; }
+.content-grid {
+  display:grid !important;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:17px;
+  overflow:visible !important;
+  padding:14px 0 18px;
+  border-top:1px solid #292929;
+  scroll-snap-type:none !important;
+}
+.content-tile {
+  min-width:0; overflow:hidden; border:1px solid #262626; border-radius:13px;
+  background:#101010; transition:transform .16s ease,border-color .16s ease,background .16s ease;
+}
+.content-tile:hover { opacity:1 !important; transform:translateY(-4px); border-color:#777; background:#141414; }
+.tile-link {
+  display:flex !important; flex-direction:column !important; align-items:stretch !important;
+  gap:0 !important; min-height:0 !important; height:100% !important; padding:0 !important;
+}
+.tile-art { width:100% !important; flex:0 0 auto !important; aspect-ratio:16/9; background:#222; font-size:11px; }
+.tile-art img { width:100%; height:100%; object-fit:cover; }
+.tile-info { padding:12px !important; }
+.tile-info h3 { font-size:14px !important; line-height:1.35; }
+.tile-info p { margin-top:6px; color:#aaa !important; font-size:11px !important; }
+[hidden] { display:none !important; }
+#settings-section { width:min(100%,900px); margin:0 auto; }
+.arcade-settings-card { margin:16px 0; padding:20px; border:1px solid #292929; border-radius:14px; background:rgba(17,17,17,.94); }
+.arcade-settings-card h3 { margin:0 0 8px; font-size:17px; }
+.arcade-settings-card p { margin:0; color:#aaa; font-size:13px; line-height:1.6; }
+.arcade-setting-row { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:15px 0; border-top:1px solid #292929; }
+.arcade-setting-row:first-of-type { margin-top:14px; }
+.arcade-setting-copy { min-width:0; }
+.arcade-setting-copy strong { display:block; font-size:14px; }
+.arcade-setting-copy span { display:block; margin-top:4px; color:#999; font-size:12px; line-height:1.4; }
+.arcade-switch { appearance:none; flex:0 0 auto; width:44px; height:25px; margin:0; border:1px solid #555; border-radius:20px; background:#292929; cursor:pointer; position:relative; transition:background .18s,border-color .18s; }
+.arcade-switch::after { content:""; position:absolute; top:3px; left:3px; width:17px; height:17px; border-radius:50%; background:#fff; transition:transform .18s; }
+.arcade-switch:checked { background:#ffc107; border-color:#ffc107; }
+.arcade-switch:checked::after { transform:translateX(19px); background:#000; }
+#arcade-dock {
+  position:fixed; z-index:99990; left:50%; bottom:20px; transform:translateX(-50%);
+  display:flex; align-items:center; gap:10px; padding:10px 12px;
+  border:1px solid #303030; border-radius:18px; background:rgba(18,18,18,.96);
+  box-shadow:0 8px 30px #000a; backdrop-filter:blur(12px);
+}
+#arcade-dock .dock-button {
+  width:48px; height:48px; padding:0; border:0; border-radius:12px;
+  display:grid; place-items:center; background:#f4f4f4; color:#050505;
+  cursor:pointer; transition:transform .15s,background .15s,color .15s;
+}
+#arcade-dock .dock-button:hover { transform:translateY(-2px); background:#ddd; }
+#arcade-dock .dock-button[aria-current="page"] { background:#ffc107; color:#000; }
+#arcade-dock svg { width:23px; height:23px; fill:currentColor; }
+body.arcade-reduced-motion, body.arcade-reduced-motion * { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+body.arcade-reduced-motion { background-image:none !important; }
+body.arcade-hide-announcements #announcementBar { display:none !important; }
+@media(max-width:600px) {
+  .content-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:11px; }
+  .tile-info { padding:10px !important; }
+  .tile-info h3 { font-size:13px !important; }
+  #arcade-dock { bottom:12px; gap:8px; padding:8px 10px; }
+  #arcade-dock .dock-button { width:46px; height:46px; }
+}
+@media(prefers-reduced-motion:reduce) { body { animation:none; } }
+
 </style>
 </head>
 <body>
@@ -703,6 +787,27 @@
       <div class="content-grid" id="apps-grid"></div>
     </section>
     </div>
+  
+    <section id="settings-section" aria-labelledby="settings-title" hidden>
+      <div class="section-heading"><div><h2 id="settings-title">Settings</h2><p>Customize your arcade experience.</p></div></div>
+      <div class="arcade-settings-card">
+        <h3>Preferences</h3>
+        <p>These settings are saved on this device.</p>
+        <label class="arcade-setting-row">
+          <span class="arcade-setting-copy"><strong>Reduce motion</strong><span>Turn off background movement and interface animations.</span></span>
+          <input class="arcade-switch" id="arcade-reduced-motion" type="checkbox" role="switch">
+        </label>
+        <label class="arcade-setting-row">
+          <span class="arcade-setting-copy"><strong>Hide announcements</strong><span>Hide the scrolling announcement bar at the top.</span></span>
+          <input class="arcade-switch" id="arcade-hide-announcements" type="checkbox" role="switch">
+        </label>
+      </div>
+      <div class="arcade-settings-card">
+        <h3>About</h3>
+        <p>Aaron Carter's Arcade — games, movies, shows, and apps in one place.</p>
+      </div>
+    </section>
+
   </main>
 
   <section class="tab-launcher" aria-label="Open arcade in another tab type">
@@ -1331,6 +1436,59 @@
       window.addEventListener('pointerdown', retry, { once: true });
       window.addEventListener('keydown', retry, { once: true });
     })();
+  </script>
+
+
+  <nav id="arcade-dock" aria-label="Main navigation">
+    <button class="dock-button" type="button" data-arcade-tab="games" aria-label="Play" title="Play" aria-current="page">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.8c0-.8.9-1.3 1.6-.9l11 6.6a1.7 1.7 0 0 1 0 2.9l-11 6.6c-.7.4-1.6-.1-1.6-.9V4.8z"/></svg>
+    </button>
+    <button class="dock-button" type="button" data-arcade-tab="movies" aria-label="Movies" title="Movies">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 4v8h16V8H4zm1-2 2 2h3L8 6H5zm6 0 2 2h3l-2-2h-3zm6 0 2 2h1V6h-3zM4 18v-1h2l1 1H4zm5 0-1-1h3l1 1H9zm6 0-1-1h3l1 1h-3zm5 0-1-1h1v1z"/></svg>
+    </button>
+    <button class="dock-button" type="button" data-arcade-tab="apps" aria-label="Apps" title="Apps">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z"/></svg>
+    </button>
+    <button class="dock-button" type="button" data-arcade-tab="settings" aria-label="Settings" title="Settings">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.8 7.8 0 0 0 0-2l2-1.5-2-3.5-2.4 1a7.7 7.7 0 0 0-1.7-1L15 3h-4l-.4 2.9a7.7 7.7 0 0 0-1.7 1l-2.4-1-2 3.5 2 1.5a7.8 7.8 0 0 0 0 2l-2 1.5 2 3.5 2.4-1a7.7 7.7 0 0 0 1.7 1L11 21h4l.4-2.9a7.7 7.7 0 0 0 1.7-1l2.4 1 2-3.5-2.1-1.6zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
+    </button>
+  </nav>
+  <script id="arcade-tab-navigation">
+  (() => {
+    const tabs = { games:'games-section', movies:'movies-section', apps:'apps-section', settings:'settings-section' };
+    const search = document.querySelector('.global-search-section');
+    const buttons = [...document.querySelectorAll('#arcade-dock [data-arcade-tab]')];
+    function activateTab(name) {
+      Object.entries(tabs).forEach(([tab, id]) => {
+        const section = document.getElementById(id);
+        if (section) section.hidden = tab !== name;
+      });
+      if (search) search.hidden = name === 'settings';
+      buttons.forEach(button => {
+        if (button.dataset.arcadeTab === name) button.setAttribute('aria-current', 'page');
+        else button.removeAttribute('aria-current');
+      });
+      window.scrollTo({ top:0, behavior:document.body.classList.contains('arcade-reduced-motion') ? 'auto' : 'smooth' });
+    }
+    buttons.forEach(button => button.addEventListener('click', () => activateTab(button.dataset.arcadeTab)));
+    const reducedMotion = document.getElementById('arcade-reduced-motion');
+    const hideAnnouncements = document.getElementById('arcade-hide-announcements');
+    try {
+      reducedMotion.checked = localStorage.getItem('aaron_arcade_reduced_motion') === 'true';
+      hideAnnouncements.checked = localStorage.getItem('aaron_arcade_hide_announcements') === 'true';
+    } catch (_) {}
+    document.body.classList.toggle('arcade-reduced-motion', reducedMotion.checked);
+    document.body.classList.toggle('arcade-hide-announcements', hideAnnouncements.checked);
+    reducedMotion.addEventListener('change', () => {
+      document.body.classList.toggle('arcade-reduced-motion', reducedMotion.checked);
+      try { localStorage.setItem('aaron_arcade_reduced_motion', String(reducedMotion.checked)); } catch (_) {}
+    });
+    hideAnnouncements.addEventListener('change', () => {
+      document.body.classList.toggle('arcade-hide-announcements', hideAnnouncements.checked);
+      try { localStorage.setItem('aaron_arcade_hide_announcements', String(hideAnnouncements.checked)); } catch (_) {}
+    });
+    activateTab('games');
+  })();
   </script>
 
 </body>
