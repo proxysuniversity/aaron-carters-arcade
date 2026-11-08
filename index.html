@@ -939,7 +939,6 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
         <button type="button" class="arcade-theme-choice" id="save-site-identity">Save favicon and tab name</button>
       </div>
       <div class="arcade-settings-card"><h3>Arcade tools</h3>
-        <button type="button" class="arcade-theme-choice" id="random-game">🎲 Random game</button>
         <button type="button" class="arcade-theme-choice" id="reset-arcade-settings">Reset all settings</button>
         <div class="arcade-counts" id="arcade-counts"></div>
       </div>
@@ -1331,6 +1330,23 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
       popup.focus();
     }
 
+    // The Random Game tile sits directly after the request card and cycles game art once per second.
+    let currentRandomGame = null;
+    let randomGameTimerStarted = false;
+    function chooseRandomGameForTile() {
+      const pool = games.filter(item => !item.hide && item.image && (item.link || item.file) && item.name !== "Want something new on this website?");
+      if (!pool.length) return null;
+      let next = pool[Math.floor(Math.random() * pool.length)];
+      if (pool.length > 1 && next === currentRandomGame) next = pool[(pool.indexOf(next) + 1) % pool.length];
+      currentRandomGame = next;
+      const image = document.getElementById('random-game-thumbnail');
+      if (image) {
+        image.src = next.image;
+        image.alt = 'Random Game thumbnail';
+      }
+      return next;
+    }
+
     function renderContent(items, gridId, type) {
       const grid = document.getElementById(gridId);
       const searchInput = document.getElementById('global-search');
@@ -1357,6 +1373,27 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
         const isFavorite=savedFavorites.includes(favoriteKey);
         return `<article class="content-tile"><button type="button" class="favorite-toggle" data-favorite-key="${escapeHTML(favoriteKey)}" aria-label="${isFavorite?'Remove from':'Add to'} favorites">${isFavorite?'★':'☆'}</button><button type="button" class="tile-link" data-open-mode="${type}" data-open-index="${index}" aria-label="Open ${escapeHTML(title)}">${row}</button></article>`;
       }).join('');
+      if (type === 'games') {
+        const requestIndex = visible.findIndex(item => item.name === "Want something new on this website?");
+        if (requestIndex >= 0) {
+          const randomTile = document.createElement('article');
+          randomTile.className = 'content-tile';
+          randomTile.id = 'random-game-slot';
+          randomTile.innerHTML = '<button type="button" class="tile-link" id="random-game-open" aria-label="Open a random game"><div class="tile-art"><img id="random-game-thumbnail" src="" alt="Random Game thumbnail" loading="eager"></div><div class="tile-info"><h3>Random Game</h3><p>A different game thumbnail every second. Click to play the featured game.</p></div></button>';
+          grid.children[requestIndex].insertAdjacentElement('afterend', randomTile);
+          chooseRandomGameForTile();
+          randomTile.querySelector('#random-game-open').addEventListener('click', () => {
+            if (!currentRandomGame) return;
+            openInBlankPage(currentRandomGame.link || currentRandomGame.file, currentRandomGame.name, 'games');
+          });
+          if (!randomGameTimerStarted) {
+            window.setInterval(() => {
+              if (document.getElementById('random-game-slot')) chooseRandomGameForTile();
+            }, 1000);
+            randomGameTimerStarted = true;
+          }
+        }
+      }
       grid.querySelectorAll('.tile-link[data-open-mode]').forEach((button, index) => {
         button.addEventListener('click', () => {
           const item = visible[index];
@@ -1686,7 +1723,6 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
     $('favicon-url').value=load('favicon_url');$('tab-name').value=load('tab_name');
     $('favicon-file').addEventListener('change',()=>readImage($('favicon-file').files[0],data=>{store('favicon',data);store('favicon_url','');applyIdentity()}));
     $('save-site-identity').addEventListener('click',()=>{const url=$('favicon-url').value.trim();if(url){store('favicon',url);store('favicon_url',url)}const name=$('tab-name').value.trim();store('tab_name',name);applyIdentity()});
-    $('random-game').addEventListener('click',()=>{const list=games.filter(x=>!x.hide&&(x.link||x.file));if(!list.length)return;const item=list[Math.floor(Math.random()*list.length)];openInBlankPage(item.link||item.file,item.name,'games')});
     $('reset-arcade-settings').addEventListener('click',()=>{if(!confirm('Reset all arcade settings saved in this browser?'))return;Object.keys(localStorage).filter(k=>k.startsWith('aaron_arcade_')).forEach(k=>localStorage.removeItem(k));location.reload()});
     // Apply locally saved game-name overrides before rendering is refreshed.
     try{const overrides=JSON.parse(load('debug_game_names','{}'));Object.entries(overrides).forEach(([idx,name])=>{if(games[Number(idx)])games[Number(idx)].name=name})}catch(_){}
