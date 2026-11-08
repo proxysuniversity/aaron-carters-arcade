@@ -1670,10 +1670,11 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
     $('reset-arcade-settings').addEventListener('click',()=>{if(!confirm('Reset all arcade settings saved in this browser?'))return;Object.keys(localStorage).filter(k=>k.startsWith('aaron_arcade_')).forEach(k=>localStorage.removeItem(k));location.reload()});
     $('debug-toggle').addEventListener('click',()=>{const panel=$('debug-panel');panel.hidden=!panel.hidden;$('debug-toggle').textContent=panel.hidden?'Enable Debug Mode':'Close Debug Mode';if(!panel.hidden){$('debug-site-name').value=load('debug_site_name');$('debug-logo-url').value=load('debug_logo');$('debug-game-select').innerHTML=games.map((g,i)=>'<option value="'+i+'">'+escapeHTML(g.name||('Game '+(i+1)))+'</option>').join();}});
     $('debug-game-select').addEventListener('change',()=>{$('debug-game-name').value=games[Number($('debug-game-select').value)]?.name||''});
-    $('debug-save-game').addEventListener('click',()=>{const idx=Number($('debug-game-select').value);const name=$('debug-game-name').value.trim();if(!name)return;let overrides={};try{overrides=JSON.parse(load('debug_game_names','{}'))}catch(_){}overrides[idx]=name;store('debug_game_names',JSON.stringify(overrides));alert('Saved locally. Refreshing the visible game cards requires reloading the page.')});
+    $('debug-save-game').addEventListener('click',()=>{const idx=Number($('debug-game-select').value);const name=$('debug-game-name').value.trim();if(!name)return;let overrides={};try{overrides=JSON.parse(load('debug_game_names','{}'))}catch(_){}overrides[idx]=name;store('debug_game_names',JSON.stringify(overrides));renderContent(games,'games-grid','games');alert('Game name saved in this browser.')});
     $('debug-save-site').addEventListener('click',()=>{store('debug_site_name',$('debug-site-name').value.trim());store('debug_logo',$('debug-logo-url').value.trim());applyIdentity()});
     // Apply locally saved game-name overrides before rendering is refreshed.
     try{const overrides=JSON.parse(load('debug_game_names','{}'));Object.entries(overrides).forEach(([idx,name])=>{if(games[Number(idx)])games[Number(idx)].name=name})}catch(_){}
+    renderContent(games,'games-grid','games');renderContent(movies,'movies-grid','movies');renderContent(apps,'apps-grid','apps');
     applyIdentity();renderFavorites();
     activateTab('games');
   })();
