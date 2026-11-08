@@ -661,7 +661,7 @@ body {
   padding-bottom:104px;
 }
 .site-header { background:rgba(5,5,5,.94) !important; backdrop-filter:blur(10px); }
-main { overflow:visible !important; padding-bottom:120px !important; }
+main { overflow:visible !important; padding-bottom:48px !important; }
 .global-search-section { width:min(100%,900px); margin:20px auto 28px; }
 .library-search { background:#111 !important; border:1px solid #333 !important; border-radius:10px !important; }
 .sections-layout { display:block !important; width:100%; max-width:1500px; }
@@ -678,19 +678,33 @@ main { overflow:visible !important; padding-bottom:120px !important; }
   scroll-snap-type:none !important;
 }
 .content-tile {
-  min-width:0; overflow:hidden; border:1px solid #262626; border-radius:13px;
-  background:#101010; transition:transform .16s ease,border-color .16s ease,background .16s ease;
+  min-width:0; overflow:hidden; border:1px solid #202020; border-radius:12px;
+  background:#000 !important; transition:transform .18s ease,border-color .18s ease;
 }
-.content-tile:hover { opacity:1 !important; transform:translateY(-4px); border-color:#777; background:#141414; }
+.content-tile:hover { opacity:1 !important; transform:translateY(-3px); border-color:#666; background:#000 !important; }
 .tile-link {
-  display:flex !important; flex-direction:column !important; align-items:stretch !important;
-  gap:0 !important; min-height:0 !important; height:100% !important; padding:0 !important;
+  position:relative; display:block !important; width:100%; aspect-ratio:16/9;
+  min-height:0 !important; height:auto !important; padding:0 !important; overflow:hidden;
+  background:#000 !important; text-align:left;
 }
-.tile-art { width:100% !important; flex:0 0 auto !important; aspect-ratio:16/9; background:#222; font-size:11px; }
-.tile-art img { width:100%; height:100%; object-fit:cover; }
-.tile-info { padding:12px !important; }
-.tile-info h3 { font-size:14px !important; line-height:1.35; }
-.tile-info p { margin-top:6px; color:#aaa !important; font-size:11px !important; }
+.tile-art { position:absolute; inset:0; width:100% !important; height:100%; aspect-ratio:auto;
+  background:#000 !important; color:#000 !important; font-size:0; }
+.tile-art img { display:block; width:100%; height:100%; object-fit:cover; }
+.tile-art span { display:none !important; }
+.tile-info {
+  position:absolute; inset:auto 0 0; z-index:2; padding:34px 13px 13px !important;
+  color:#fff; background:linear-gradient(transparent,rgba(0,0,0,.96));
+  opacity:0; transform:translateY(8px); transition:opacity .2s ease,transform .2s ease;
+  pointer-events:none;
+}
+.content-tile:hover .tile-info, .tile-link:focus-visible .tile-info, .content-tile:focus-within .tile-info {
+  opacity:1; transform:translateY(0);
+}
+.tile-info h3 { margin:0; color:#fff !important; font-size:14px !important; line-height:1.35; }
+.tile-info p { margin-top:6px; color:#ddd !important; font-size:11px !important; line-height:1.4; }
+@media (hover:none) {
+  .tile-info { opacity:1; transform:none; background:linear-gradient(transparent,rgba(0,0,0,.92)); }
+}
 [hidden] { display:none !important; }
 #settings-section { width:min(100%,900px); margin:0 auto; }
 .arcade-settings-card { margin:16px 0; padding:20px; border:1px solid #292929; border-radius:14px; background:rgba(17,17,17,.94); }
@@ -706,28 +720,37 @@ main { overflow:visible !important; padding-bottom:120px !important; }
 .arcade-switch:checked { background:#ffc107; border-color:#ffc107; }
 .arcade-switch:checked::after { transform:translateX(19px); background:#000; }
 #arcade-dock {
-  position:fixed; z-index:99990; left:50%; bottom:20px; transform:translateX(-50%);
-  display:flex; align-items:center; gap:10px; padding:10px 12px;
-  border:1px solid #303030; border-radius:18px; background:rgba(18,18,18,.96);
-  box-shadow:0 8px 30px #000a; backdrop-filter:blur(12px);
+  position:relative; z-index:20; width:100%; display:flex; align-items:center; justify-content:center;
+  gap:clamp(8px,2vw,24px); padding:12px 20px; border:0; border-bottom:1px solid #242424;
+  border-radius:0; background:#000; box-shadow:none; backdrop-filter:none; transform:none;
 }
 #arcade-dock .dock-button {
-  width:48px; height:48px; padding:0; border:0; border-radius:12px;
-  display:grid; place-items:center; background:#f4f4f4; color:#050505;
-  cursor:pointer; transition:transform .15s,background .15s,color .15s;
+  min-width:92px; padding:10px 18px; border:1px solid transparent; border-radius:9px;
+  display:flex; align-items:center; justify-content:center; gap:9px;
+  background:transparent; color:#aaa; cursor:pointer; font:inherit; font-size:14px;
+  transition:background .15s,color .15s,border-color .15s;
 }
-#arcade-dock .dock-button:hover { transform:translateY(-2px); background:#ddd; }
-#arcade-dock .dock-button[aria-current="page"] { background:#ffc107; color:#000; }
-#arcade-dock svg { width:23px; height:23px; fill:currentColor; }
+#arcade-dock .dock-button:hover { background:#151515; color:#fff; }
+#arcade-dock .dock-button[aria-current="page"] { background:#171717; color:#fff; border-color:#3a3a3a; }
+#arcade-dock svg { width:18px; height:18px; flex:0 0 auto; fill:currentColor; }
+#arcade-dock .dock-label { font-size:13px; }
+#arcade-dock .dock-button:nth-child(1) .dock-label::before { content:"Play"; }
+#arcade-dock .dock-button:nth-child(2) .dock-label::before { content:"Movies"; }
+#arcade-dock .dock-button:nth-child(3) .dock-label::before { content:"Apps"; }
+#arcade-dock .dock-button:nth-child(4) .dock-label::before { content:"Settings"; }
 body.arcade-reduced-motion, body.arcade-reduced-motion * { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
 body.arcade-hide-announcements #announcementBar { display:none !important; }
 @media(max-width:600px) {
   .content-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:11px; }
   .tile-info { padding:10px !important; }
   .tile-info h3 { font-size:13px !important; }
-  #arcade-dock { bottom:12px; gap:8px; padding:8px 10px; }
-  #arcade-dock .dock-button { width:46px; height:46px; }
+  #arcade-dock { gap:4px; padding:9px 6px; }
+  #arcade-dock .dock-button { min-width:0; flex:1; padding:9px 5px; gap:5px; font-size:12px; }
+  #arcade-dock .dock-label { font-size:12px; }
 }
+body.arcade-compact-cards .content-grid { grid-template-columns:repeat(auto-fill,minmax(135px,1fr)); gap:11px; }
+body.arcade-always-show-info .tile-info { opacity:1; transform:none; }
+body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
 @media(prefers-reduced-motion:reduce) { body { animation:none; } }
 
 </style>
@@ -754,6 +777,20 @@ body.arcade-hide-announcements #announcementBar { display:none !important; }
       <img src="https://proxysuniversity.github.io/aaron-carters-arcade/newlogo.png"
     <div class="header-actions"><button class="update-log-button" id="openWhatsNew" type="button">What's new?</button></div>
   </header>
+  <nav id="arcade-dock" aria-label="Main navigation">
+    <button class="dock-button" type="button" data-arcade-tab="games" aria-label="Play" title="Play" aria-current="page">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.8c0-.8.9-1.3 1.6-.9l11 6.6a1.7 1.7 0 0 1 0 2.9l-11 6.6c-.7.4-1.6-.1-1.6-.9V4.8z"/></svg><span class="dock-label"></span>
+    </button>
+    <button class="dock-button" type="button" data-arcade-tab="movies" aria-label="Movies" title="Movies">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 4v8h16V8H4zm1-2 2 2h3L8 6H5zm6 0 2 2h3l-2-2h-3zm6 0 2 2h1V6h-3zM4 18v-1h2l1 1H4zm5 0-1-1h3l1 1H9zm6 0-1-1h3l1 1h-3zm5 0-1-1h1v1z"/></svg><span class="dock-label"></span>
+    </button>
+    <button class="dock-button" type="button" data-arcade-tab="apps" aria-label="Apps" title="Apps">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z"/></svg><span class="dock-label"></span>
+    </button>
+    <button class="dock-button" type="button" data-arcade-tab="settings" aria-label="Settings" title="Settings">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.8 7.8 0 0 0 0-2l2-1.5-2-3.5-2.4 1a7.7 7.7 0 0 0-1.7-1L15 3h-4l-.4 2.9a7.7 7.7 0 0 0-1.7 1l-2.4-1-2 3.5 2 1.5a7.8 7.8 0 0 0 0 2l-2 1.5 2 3.5 2.4-1a7.7 7.7 0 0 0 1.7 1L11 21h4l.4-2.9a7.7 7.7 0 0 0 1.7-1l2.4 1 2-3.5-2.1-1.6zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg><span class="dock-label"></span>
+    </button>
+  </nav>
 
   <main>
     <section class="global-search-section" aria-label="Search the entire arcade">
@@ -795,6 +832,22 @@ body.arcade-hide-announcements #announcementBar { display:none !important; }
         <label class="arcade-setting-row">
           <span class="arcade-setting-copy"><strong>Hide announcements</strong><span>Hide the scrolling announcement bar at the top.</span></span>
           <input class="arcade-switch" id="arcade-hide-announcements" type="checkbox" role="switch">
+        </label>
+        <label class="arcade-setting-row">
+          <span class="arcade-setting-copy"><strong>Compact cards</strong><span>Fit more game, movie, and app thumbnails on the screen.</span></span>
+          <input class="arcade-switch" id="arcade-compact-cards" type="checkbox" role="switch">
+        </label>
+        <label class="arcade-setting-row">
+          <span class="arcade-setting-copy"><strong>Always show card details</strong><span>Keep titles and descriptions visible without hovering.</span></span>
+          <input class="arcade-switch" id="arcade-always-show-info" type="checkbox" role="switch">
+        </label>
+      </div>
+      <div class="arcade-settings-card">
+        <h3>Display</h3>
+        <p>Keep the arcade looking the way you like.</p>
+        <label class="arcade-setting-row">
+          <span class="arcade-setting-copy"><strong>Black background</strong><span>Use the arcade's solid black background.</span></span>
+          <input class="arcade-switch" type="checkbox" checked disabled aria-label="Black background is always enabled">
         </label>
       </div>
       <div class="arcade-settings-card">
@@ -1434,20 +1487,7 @@ body.arcade-hide-announcements #announcementBar { display:none !important; }
   </script>
 
 
-  <nav id="arcade-dock" aria-label="Main navigation">
-    <button class="dock-button" type="button" data-arcade-tab="games" aria-label="Play" title="Play" aria-current="page">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.8c0-.8.9-1.3 1.6-.9l11 6.6a1.7 1.7 0 0 1 0 2.9l-11 6.6c-.7.4-1.6-.1-1.6-.9V4.8z"/></svg>
-    </button>
-    <button class="dock-button" type="button" data-arcade-tab="movies" aria-label="Movies" title="Movies">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 4v8h16V8H4zm1-2 2 2h3L8 6H5zm6 0 2 2h3l-2-2h-3zm6 0 2 2h1V6h-3zM4 18v-1h2l1 1H4zm5 0-1-1h3l1 1H9zm6 0-1-1h3l1 1h-3zm5 0-1-1h1v1z"/></svg>
-    </button>
-    <button class="dock-button" type="button" data-arcade-tab="apps" aria-label="Apps" title="Apps">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z"/></svg>
-    </button>
-    <button class="dock-button" type="button" data-arcade-tab="settings" aria-label="Settings" title="Settings">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.8 7.8 0 0 0 0-2l2-1.5-2-3.5-2.4 1a7.7 7.7 0 0 0-1.7-1L15 3h-4l-.4 2.9a7.7 7.7 0 0 0-1.7 1l-2.4-1-2 3.5 2 1.5a7.8 7.8 0 0 0 0 2l-2 1.5 2 3.5 2.4-1a7.7 7.7 0 0 0 1.7 1L11 21h4l.4-2.9a7.7 7.7 0 0 0 1.7-1l2.4 1 2-3.5-2.1-1.6zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
-    </button>
-  </nav>
+
   <script id="arcade-tab-navigation">
   (() => {
     const tabs = { games:'games-section', movies:'movies-section', apps:'apps-section', settings:'settings-section' };
@@ -1466,21 +1506,21 @@ body.arcade-hide-announcements #announcementBar { display:none !important; }
       window.scrollTo({ top:0, behavior:document.body.classList.contains('arcade-reduced-motion') ? 'auto' : 'smooth' });
     }
     buttons.forEach(button => button.addEventListener('click', () => activateTab(button.dataset.arcadeTab)));
-    const reducedMotion = document.getElementById('arcade-reduced-motion');
-    const hideAnnouncements = document.getElementById('arcade-hide-announcements');
-    try {
-      reducedMotion.checked = localStorage.getItem('aaron_arcade_reduced_motion') === 'true';
-      hideAnnouncements.checked = localStorage.getItem('aaron_arcade_hide_announcements') === 'true';
-    } catch (_) {}
-    document.body.classList.toggle('arcade-reduced-motion', reducedMotion.checked);
-    document.body.classList.toggle('arcade-hide-announcements', hideAnnouncements.checked);
-    reducedMotion.addEventListener('change', () => {
-      document.body.classList.toggle('arcade-reduced-motion', reducedMotion.checked);
-      try { localStorage.setItem('aaron_arcade_reduced_motion', String(reducedMotion.checked)); } catch (_) {}
-    });
-    hideAnnouncements.addEventListener('change', () => {
-      document.body.classList.toggle('arcade-hide-announcements', hideAnnouncements.checked);
-      try { localStorage.setItem('aaron_arcade_hide_announcements', String(hideAnnouncements.checked)); } catch (_) {}
+    const settingControls = [
+      { id:'arcade-reduced-motion', key:'aaron_arcade_reduced_motion', apply:v => document.body.classList.toggle('arcade-reduced-motion', v) },
+      { id:'arcade-hide-announcements', key:'aaron_arcade_hide_announcements', apply:v => document.body.classList.toggle('arcade-hide-announcements', v) },
+      { id:'arcade-compact-cards', key:'aaron_arcade_compact_cards', apply:v => document.body.classList.toggle('arcade-compact-cards', v) },
+      { id:'arcade-always-show-info', key:'aaron_arcade_always_show_info', apply:v => document.body.classList.toggle('arcade-always-show-info', v) }
+    ];
+    settingControls.forEach(setting => {
+      const control = document.getElementById(setting.id);
+      if (!control) return;
+      try { control.checked = localStorage.getItem(setting.key) === 'true'; } catch (_) {}
+      setting.apply(control.checked);
+      control.addEventListener('change', () => {
+        setting.apply(control.checked);
+        try { localStorage.setItem(setting.key, String(control.checked)); } catch (_) {}
+      });
     });
     activateTab('games');
   })();
