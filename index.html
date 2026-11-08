@@ -942,8 +942,8 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
       <div class="arcade-settings-card"><h3>Arcade stats</h3><div class="arcade-counts" id="arcade-counts"></div></div>
       <div class="arcade-settings-card"><h3>Favorites</h3><p>Save games you want to find again.</p><div id="favorite-games-list"></div></div>
       <div class="arcade-settings-card"><h3>Debug Mode / Arcade Editor</h3><p>Turn the editor on when you want to customize your arcade. Your changes are saved in this browser.</p>
-        <label class="arcade-setting-row"><span class="arcade-setting-copy"><strong>Debug Mode</strong><span>Show or hide all advanced editing tools.</span></span><input class="arcade-switch" id="debug-mode-switch" type="checkbox" role="switch"></label>
-        <div id="debug-panel" hidden>
+        <label class="arcade-setting-row"><span class="arcade-setting-copy"><strong>Debug Mode</strong><span>Show or hide all advanced editing tools.</span></span><input class="arcade-switch" id="debug-mode-switch" type="checkbox" role="switch" checked></label>
+        <div id="debug-panel">
           <div class="debug-status" id="debug-save-status" role="status">Ready</div>
           <div class="debug-toolbar"><button type="button" class="arcade-theme-choice" id="debug-export">Export backup</button><button type="button" class="arcade-theme-choice" id="debug-import-button">Import backup</button><input id="debug-import-file" type="file" accept="application/json,.json" hidden><button type="button" class="arcade-theme-choice" id="debug-restore-site">Restore original site look</button></div>
           <h4>Website editor</h4>
@@ -1383,7 +1383,10 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
     let selectedEntryIndex=-1;
     function populateEntrySelect(){const list=getCollection();$('debug-entry-select').innerHTML=list.map((item,i)=>'<option value="'+i+'">'+(item.hide?'[Hidden] ':'')+escapeHTML(titleOf(item,$('debug-content-type').value)||('Entry '+(i+1)))+'</option>').join('');if(!list.length){selectedEntryIndex=-1;return}if(selectedEntryIndex<0||selectedEntryIndex>=list.length)selectedEntryIndex=0;$('debug-entry-select').value=String(selectedEntryIndex);loadEntryIntoEditor()}
     function loadEntryIntoEditor(){const type=$('debug-content-type').value,list=getCollection(),idx=Number($('debug-entry-select').value),item=list[idx];selectedEntryIndex=Number.isInteger(idx)?idx:-1;if(!item)return;$('debug-entry-title').value=titleOf(item,type);$('debug-entry-image').value=item.image||'';$('debug-entry-description').value=item.description||'';$('debug-entry-link').value=type==='movies'?(item.googleDriveVideo||item.link||''):(item.link||item.file||'');$('debug-entry-hidden').checked=!!item.hide}
-    $('debug-mode-switch').checked=load('debug_enabled')==='true';
+    // Start with Debug Mode visible so the editor is immediately discoverable.
+    // The switch still lets the user hide/show the full editor.
+    if(load('debug_initialized')!=='true'){store('debug_enabled','true');store('debug_initialized','true')}
+    $('debug-mode-switch').checked=load('debug_enabled','true')!=='false';
     $('debug-panel').hidden=!$('debug-mode-switch').checked;
     $('debug-mode-switch').addEventListener('change',()=>{const on=$('debug-mode-switch').checked;$('debug-panel').hidden=!on;store('debug_enabled',String(on));if(on){$('debug-site-name').value=load('debug_site_name');$('debug-logo-url').value=load('debug_logo');$('debug-tab-name').value=load('tab_name');$('debug-favicon-url').value=load('favicon');$('debug-accent').value=load('site_color','#ffc107');$('debug-background').value=load('debug_background');populateEntrySelect()}});
     $('debug-content-type').addEventListener('change',()=>{selectedEntryIndex=-1;populateEntrySelect()});
