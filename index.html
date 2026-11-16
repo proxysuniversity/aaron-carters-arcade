@@ -937,8 +937,9 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
         <select class="library-search" id="website-mode">
           <option value="blob">Blob Tab</option>
           <option value="blank">About:Blank</option>
-          <option value="clock">About:Blank Clock</option>
+          <option value="campus">About:Blank Cloaked — Campus Student</option>
         </select>
+        <p class="website-help">Accepted formats: example.com, www.example.com, https://example.com, http://example.com, and //example.com.</p>
         <button class="website-open-button" id="website-open" type="button">Open website</button>
         <p class="website-help" id="website-message" role="status" aria-live="polite">Enter a full website address, then choose how to open it.</p>
       </div>
@@ -1822,12 +1823,14 @@ renderFavorites();
 
     function showMessage(text) { message.textContent = text; }
     function normalizeUrl(value) {
-      const raw = value.trim();
+      let raw = value.trim();
       if (!raw) return null;
-      const candidate = /^[a-zA-Z][a-zA-Z\d+.-]*:/.test(raw) ? raw : 'https://' + raw;
+      // Accept protocol-relative links as well as ordinary domains and full URLs.
+      if (raw.startsWith('//')) raw = 'https:' + raw;
+      else if (!/^[a-zA-Z][a-zA-Z\d+.-]*:/.test(raw)) raw = 'https://' + raw;
       try {
-        const parsed = new URL(candidate);
-        if (!['http:', 'https:'].includes(parsed.protocol)) return null;
+        const parsed = new URL(raw);
+        if (!['http:', 'https:'].includes(parsed.protocol) || !parsed.hostname.includes('.')) return null;
         return parsed.href;
       } catch (_) { return null; }
     }
@@ -1835,23 +1838,16 @@ renderFavorites();
       return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
         .replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
-    function wrapper(target, clock) {
+    function wrapper(target, campusDisguise) {
       const safe = escapeAttribute(target);
-      const clockMarkup = clock
-        ? '<div id="website-clock" aria-label="Current time"></div>'
-        : '';
-      const clockStyle = clock
-        ? '#website-clock{position:fixed;z-index:2;top:12px;right:16px;padding:7px 10px;border-radius:6px;background:#111d;color:#fff;font:600 13px system-ui;pointer-events:none;letter-spacing:.04em}'
-        : '';
-      const clockScript = clock
-        ? '<script>const el=document.getElementById("website-clock");function tick(){el.textContent=new Date().toLocaleTimeString()}tick();setInterval(tick,1000)<\/script>'
+      const title = campusDisguise ? 'Campus Student' : 'Website';
+      const campusIcon = campusDisguise
+        ? '<link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3zhJME8fr16iO9F2HfX_7MrPoe4sT-xQv4jq3jO45OQ&amp;s=10">'
         : '';
       return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' +
-        (clock ? 'Clock' : '') +
-        '</title><style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000}iframe{display:block;width:100%;height:100%;border:0;background:#000}' +
-        clockStyle + '</style></head><body><iframe src="' + safe +
-        '" title="Website" allow="autoplay; fullscreen; gamepad; encrypted-media; picture-in-picture" allowfullscreen></iframe>' +
-        clockMarkup + clockScript + '</body></html>';
+        title + '</title>' + campusIcon +
+        '<style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000}iframe{display:block;width:100%;height:100%;border:0;background:#000}</style></head><body><iframe src="' + safe +
+        '" title="' + title + '" allow="autoplay; fullscreen; gamepad; encrypted-media; picture-in-picture" allowfullscreen></iframe></body></html>';
     }
     openButton.addEventListener('click', () => {
       const target = normalizeUrl(urlInput.value);
@@ -1872,13 +1868,13 @@ renderFavorites();
           tab.addEventListener('pagehide', () => URL.revokeObjectURL(blobUrl), {once:true});
         } else {
           tab.document.open();
-          tab.document.write(wrapper(target, mode === 'clock'));
+          tab.document.write(wrapper(target, mode === 'campus'));
           tab.document.close();
         }
         showMessage('Opening ' + target);
       } catch (_) {
         try { tab.close(); } catch (ignored) {}
-        showMessage('This browser blocked that opening mode. Try About:Blank instead.');
+        showMessage('This browser blocked that opening mode. Try the standard About:Blank option instead.');
       }
     });
     urlInput.addEventListener('keydown', event => {
