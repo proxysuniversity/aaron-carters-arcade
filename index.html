@@ -846,6 +846,18 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
 #games-grid .tile-info h3{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
 #games-grid .tile-info p{white-space:normal!important;overflow:visible!important;display:block!important;-webkit-line-clamp:unset!important;line-clamp:unset!important}
 @media(max-width:600px){#games-grid.content-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:13px!important}#games-grid .tile-info{padding:30px 10px 10px!important}}
+
+    /* Websites tab */
+    .websites-card { width:min(100%,760px); }
+    .websites-card .library-search { max-width:none; margin:8px 0 20px; }
+    .website-open-button {
+      display:inline-flex; align-items:center; justify-content:center;
+      min-height:44px; padding:11px 22px; border:1px solid #fff;
+      border-radius:7px; background:#fff; color:#000; font:inherit;
+      font-size:13px; font-weight:700; cursor:pointer;
+    }
+    .website-open-button:hover { background:#ddd; }
+    .website-help { margin:14px 0 0; color:#aaa; font-size:12px; line-height:1.6; }
 </style>
 </head>
 <body>
@@ -880,6 +892,9 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
     <button class="dock-button" type="button" data-arcade-tab="apps" aria-label="Apps" title="Apps">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z"/></svg><span class="dock-label"></span>
     </button>
+    <button class="dock-button" type="button" data-arcade-tab="websites" aria-label="Websites" title="Websites">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 9h-3.1a15.7 15.7 0 0 0-1.3-6 8.03 8.03 0 0 1 4.4 6zM12 4c.9 1.3 1.6 3.8 1.8 7h-3.6c.2-3.2.9-5.7 1.8-7zM4.1 13h3.1a15.7 15.7 0 0 0 1.3 6 8.03 8.03 0 0 1-4.4-6zm3.1-2H4.1a8.03 8.03 0 0 1 4.4-6 15.7 15.7 0 0 0-1.3 6zM12 20c-.9-1.3-1.6-3.8-1.8-7h3.6c-.2 3.2-.9 5.7-1.8 7zm2.5-1a15.7 15.7 0 0 0 1.3-6h3.1a8.03 8.03 0 0 1-4.4 6z"/></svg><span class="dock-label"></span>
+    </button>
     <button class="dock-button" type="button" data-arcade-tab="settings" aria-label="Settings" title="Settings">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.8 7.8 0 0 0 0-2l2-1.5-2-3.5-2.4 1a7.7 7.7 0 0 0-1.7-1L15 3h-4l-.4 2.9a7.7 7.7 0 0 0-1.7 1l-2.4-1-2 3.5 2 1.5a7.8 7.8 0 0 0 0 2l-2 1.5 2 3.5 2.4-1a7.7 7.7 0 0 0 1.7 1L11 21h4l.4-2.9a7.7 7.7 0 0 0 1.7-1l2.4 1 2-3.5-2.1-1.6zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg><span class="dock-label"></span>
     </button>
@@ -913,6 +928,22 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
     </section>
     </div>
   
+    <section id="websites-section" class="content-section" aria-labelledby="websites-title" hidden>
+      <div class="section-heading"><div><h2 id="websites-title">Websites</h2><p>Open a website in a new tab using your preferred mode.</p></div></div>
+      <div class="arcade-settings-card websites-card">
+        <label class="library-search-label" for="website-url">Website URL</label>
+        <input class="library-search" id="website-url" type="url" placeholder="https://example.com" autocomplete="url" inputmode="url">
+        <label class="library-search-label" for="website-mode">Opening mode</label>
+        <select class="library-search" id="website-mode">
+          <option value="blob">Blob Tab</option>
+          <option value="blank">About:Blank</option>
+          <option value="clock">About:Blank Clock</option>
+        </select>
+        <button class="website-open-button" id="website-open" type="button">Open website</button>
+        <p class="website-help" id="website-message" role="status" aria-live="polite">Enter a full website address, then choose how to open it.</p>
+      </div>
+    </section>
+
     <section id="settings-section" aria-labelledby="settings-title" hidden>
       <div class="section-heading"><div><h2 id="settings-title">Settings</h2><p>Make the arcade work the way you like.</p></div></div>
       <div class="arcade-settings-card">
@@ -1661,7 +1692,7 @@ renderFavorites();
 
   <script id="arcade-tab-navigation">
   (() => {
-    const tabs = { games:'games-section', movies:'movies-section', apps:'apps-section', settings:'settings-section' };
+    const tabs = { games:'games-section', movies:'movies-section', apps:'apps-section', websites:'websites-section', settings:'settings-section' };
     const search = document.querySelector('.global-search-section');
     const buttons = [...document.querySelectorAll('#arcade-dock [data-arcade-tab]')];
     function activateTab(name) {
@@ -1669,7 +1700,7 @@ renderFavorites();
         const section = document.getElementById(id);
         if (section) section.hidden = tab !== name;
       });
-      if (search) search.hidden = name === 'settings';
+      if (search) search.hidden = name === 'settings' || name === 'websites';
       buttons.forEach(button => {
         if (button.dataset.arcadeTab === name) button.setAttribute('aria-current', 'page');
         else button.removeAttribute('aria-current');
@@ -1777,6 +1808,82 @@ renderFavorites();
 
     applyIdentity();renderFavorites();
     activateTab('games');
+  })();
+  </script>
+
+
+  <script id="arcade-websites-tool">
+  (() => {
+    const urlInput = document.getElementById('website-url');
+    const modeInput = document.getElementById('website-mode');
+    const openButton = document.getElementById('website-open');
+    const message = document.getElementById('website-message');
+    if (!urlInput || !modeInput || !openButton || !message) return;
+
+    function showMessage(text) { message.textContent = text; }
+    function normalizeUrl(value) {
+      const raw = value.trim();
+      if (!raw) return null;
+      const candidate = /^[a-zA-Z][a-zA-Z\d+.-]*:/.test(raw) ? raw : 'https://' + raw;
+      try {
+        const parsed = new URL(candidate);
+        if (!['http:', 'https:'].includes(parsed.protocol)) return null;
+        return parsed.href;
+      } catch (_) { return null; }
+    }
+    function escapeAttribute(value) {
+      return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function wrapper(target, clock) {
+      const safe = escapeAttribute(target);
+      const clockMarkup = clock
+        ? '<div id="website-clock" aria-label="Current time"></div>'
+        : '';
+      const clockStyle = clock
+        ? '#website-clock{position:fixed;z-index:2;top:12px;right:16px;padding:7px 10px;border-radius:6px;background:#111d;color:#fff;font:600 13px system-ui;pointer-events:none;letter-spacing:.04em}'
+        : '';
+      const clockScript = clock
+        ? '<script>const el=document.getElementById("website-clock");function tick(){el.textContent=new Date().toLocaleTimeString()}tick();setInterval(tick,1000)<\/script>'
+        : '';
+      return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' +
+        (clock ? 'Clock' : '') +
+        '</title><style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000}iframe{display:block;width:100%;height:100%;border:0;background:#000}' +
+        clockStyle + '</style></head><body><iframe src="' + safe +
+        '" title="Website" allow="autoplay; fullscreen; gamepad; encrypted-media; picture-in-picture" allowfullscreen></iframe>' +
+        clockMarkup + clockScript + '</body></html>';
+    }
+    openButton.addEventListener('click', () => {
+      const target = normalizeUrl(urlInput.value);
+      if (!target) { showMessage('Enter a valid website URL starting with http:// or https://.'); urlInput.focus(); return; }
+      const mode = modeInput.value;
+      const tab = window.open(mode === 'blob' ? 'about:blank' : 'about:blank', '_blank');
+      if (!tab) { showMessage('The new tab was blocked. Allow pop-ups for this website and try again.'); return; }
+      try {
+        if (mode === 'blob') {
+          if (!['http:', 'https:'].includes(location.protocol)) {
+            tab.close();
+            showMessage('Blob Tab needs the arcade to be opened from its normal HTTPS website.');
+            return;
+          }
+          const blob = new Blob([wrapper(target, false)], {type:'text/html'});
+          const blobUrl = URL.createObjectURL(blob);
+          tab.location.href = blobUrl;
+          tab.addEventListener('pagehide', () => URL.revokeObjectURL(blobUrl), {once:true});
+        } else {
+          tab.document.open();
+          tab.document.write(wrapper(target, mode === 'clock'));
+          tab.document.close();
+        }
+        showMessage('Opening ' + target);
+      } catch (_) {
+        try { tab.close(); } catch (ignored) {}
+        showMessage('This browser blocked that opening mode. Try About:Blank instead.');
+      }
+    });
+    urlInput.addEventListener('keydown', event => {
+      if (event.key === 'Enter') openButton.click();
+    });
   })();
   </script>
 
