@@ -935,9 +935,18 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
         <input class="library-search" id="website-url" type="url" placeholder="https://example.com" autocomplete="url" inputmode="url">
         <label class="library-search-label" for="website-mode">Opening mode</label>
         <select class="library-search" id="website-mode">
-          <option value="blob">Blob Tab</option>
-          <option value="blank">About:Blank</option>
-          <option value="campus">About:Blank Cloaked — Campus Student</option>
+          <optgroup label="Opening modes">
+            <option value="blob">Blob Tab</option>
+            <option value="blank">About:Blank</option>
+            <option value="campus">About:Blank Cloaked — Campus Student</option>
+          </optgroup>
+          <optgroup label="URL types (About:Blank)">
+            <option value="urltype:domain">Regular domain</option>
+            <option value="urltype:subdomain">Subdomain</option>
+            <option value="urltype:localhost">Localhost</option>
+            <option value="urltype:ipv4">IPv4 address</option>
+            <option value="urltype:ipv6">IPv6 address</option>
+          </optgroup>
         </select>
         <p class="website-help">Accepted formats: example.com, www.example.com, https://example.com, http://example.com, and //example.com.</p>
         <button class="website-open-button" id="website-open" type="button">Open website</button>
@@ -1850,6 +1859,22 @@ renderFavorites();
         return parsed.href;
       } catch (_) { return null; }
     }
+    function matchesUrlType(target, type) {
+      if (!type || type === 'domain') return true;
+      try {
+        const host = new URL(target).hostname.toLowerCase();
+        const isLocalhost = host === 'localhost' || host.endsWith('.localhost');
+        const isIPv4 = /^(?:\\d{1,3}\\.){3}\\d{1,3}$/.test(host) &&
+          host.split('.').every(part => Number(part) >= 0 && Number(part) <= 255);
+        const isIPv6 = /^\\[[0-9a-f:]+\\]$/i.test(host);
+        const labels = host.split('.');
+        const isSubdomain = !isLocalhost && !isIPv4 && !isIPv6 && labels.length > 2;
+        return type === 'localhost' ? isLocalhost :
+          type === 'ipv4' ? isIPv4 :
+          type === 'ipv6' ? isIPv6 :
+          type === 'subdomain' ? isSubdomain : true;
+      } catch (_) { return false; }
+    }
     function escapeAttribute(value) {
       return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
         .replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -1868,8 +1893,17 @@ renderFavorites();
     openButton.addEventListener('click', () => {
       const target = normalizeUrl(urlInput.value);
       if (!target) { showMessage('Enter a valid website URL starting with http:// or https://.'); urlInput.focus(); return; }
-      const mode = modeInput.value;
-      const tab = window.open(mode === 'blob' ? 'about:blank' : 'about:blank', '_blank');
+      const selectedMode = modeInput.value;
+      const isUrlType = selectedMode.startsWith('urltype:');
+      const urlType = isUrlType ? selectedMode.slice(8) : '';
+      const mode = isUrlType ? 'blank' : selectedMode;
+      if (isUrlType && !matchesUrlType(target, urlType)) {
+        const labels = {subdomain:'a subdomain (for example, app.example.com)',localhost:'a localhost address',ipv4:'an IPv4 address',ipv6:'an IPv6 address'};
+        showMessage('That URL is not ' + (labels[urlType] || 'the selected URL type') + '.');
+        urlInput.focus();
+        return;
+      }
+      const tab = window.open('about:blank', '_blank');
       if (!tab) { showMessage('The new tab was blocked. Allow pop-ups for this website and try again.'); return; }
       try {
         if (mode === 'blob') {
