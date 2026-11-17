@@ -863,40 +863,12 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
     #tools-source-output { width:100%; min-height:180px; resize:vertical; color:#ddd; background:#090909; font:12px/1.5 monospace!important; }
     .tools-source-card .website-open-button { margin:8px 8px 8px 0; }
     .tools-source-card .website-open-button:disabled { opacity:.45; cursor:not-allowed; }
-/* Stable full-width layout for the library and its cards. */
-    main { display:block !important; width:100% !important; max-width:none !important; }
-    .sections-layout { display:block !important; width:100% !important; max-width:1500px !important; margin:0 auto !important; padding:0 24px !important; box-sizing:border-box !important; }
-    #games-section { display:block !important; width:100% !important; max-width:none !important; min-width:0 !important; }
-    #games-grid.content-grid {
-      display:grid !important;
-      width:100% !important;
-      max-width:none !important;
-      min-width:0 !important;
-      margin:0 !important;
-      padding:14px 0 18px !important;
-      box-sizing:border-box !important;
-      grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)) !important;
-      grid-auto-flow:row !important;
-      justify-content:stretch !important;
-      align-content:start !important;
-      align-items:start !important;
-      gap:20px !important;
-      overflow:visible !important;
-    }
-    #games-grid.content-grid > .content-tile {
-      display:block !important;
-      width:100% !important;
-      min-width:0 !important;
-      max-width:none !important;
-      flex:none !important;
-      justify-self:stretch !important;
-      box-sizing:border-box !important;
-    }
-    #games-grid .tile-link { width:100% !important; }
-    @media(max-width:600px) {
-      .sections-layout { padding:0 12px !important; }
-      #games-grid.content-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:13px !important; }
-    }
+/* Keep the main game library full-width; avoid accidental narrow centered columns. */
+    main { width:100%; }
+    .sections-layout { display:block !important; width:100% !important; max-width:none !important; margin:0 !important; }
+    #games-section, #movies-section, #apps-section { width:100% !important; max-width:none !important; }
+    #games-grid.content-grid { display:grid !important; width:100% !important; max-width:none !important; margin:0 !important; grid-template-columns:repeat(auto-fill,minmax(245px,1fr)) !important; gap:20px !important; }
+    @media(max-width:600px) { #games-grid.content-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:13px !important; } }
 </style>
 </head>
 <body>
