@@ -859,6 +859,7 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
     .website-open-button:hover { background:#ddd; }
     .website-help { margin:14px 0 0; color:#aaa; font-size:12px; line-height:1.6; }
 </style>
+<style id="modify-website-ui">.website-editor-heading{margin:28px 0 8px;padding-top:20px;border-top:1px solid #444;font-size:18px}.website-editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.website-editor-grid input{display:block;width:100%;height:42px;margin-top:8px;padding:3px;background:#111;border:1px solid #444;border-radius:8px}#modify-page-zoom{width:100%;accent-color:#fff;margin:8px 0 18px}#modify-page-zoom-value{float:right;color:#aaa}@media(max-width:520px){.website-editor-grid{grid-template-columns:1fr}}</style>
 </head>
 <body>
   <div id="maintenanceScreen">oh no you don't</div>
@@ -892,11 +893,11 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
     <button class="dock-button" type="button" data-arcade-tab="apps" aria-label="Apps" title="Apps">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z"/></svg><span class="dock-label"></span>
     </button>
-    <button class="dock-button" type="button" data-arcade-tab="websites" aria-label="Websites" title="Websites">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 9h-3.1a15.7 15.7 0 0 0-1.3-6 8.03 8.03 0 0 1 4.4 6zM12 4c.9 1.3 1.6 3.8 1.8 7h-3.6c.2-3.2.9-5.7 1.8-7zM4.1 13h3.1a15.7 15.7 0 0 0 1.3 6 8.03 8.03 0 0 1-4.4-6zm3.1-2H4.1a8.03 8.03 0 0 1 4.4-6 15.7 15.7 0 0 0-1.3 6zM12 20c-.9-1.3-1.6-3.8-1.8-7h3.6c-.2 3.2-.9 5.7-1.8 7zm2.5-1a15.7 15.7 0 0 0 1.3-6h3.1a8.03 8.03 0 0 1-4.4 6z"/></svg><span class="dock-label"></span>
+    <button class="dock-button" type="button" data-arcade-tab="websites" aria-label="Modify a Website" title="Modify a Website">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.8 12 3l9 7.8v9a1.2 1.2 0 0 1-1.2 1.2h-5.3v-6.2h-5V21H4.2A1.2 1.2 0 0 1 3 19.8z"/></svg><span class="dock-label">Modify a Website</span>
     </button>
     <button class="dock-button" type="button" data-arcade-tab="settings" aria-label="Settings" title="Settings">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.8 7.8 0 0 0 0-2l2-1.5-2-3.5-2.4 1a7.7 7.7 0 0 0-1.7-1L15 3h-4l-.4 2.9a7.7 7.7 0 0 0-1.7 1l-2.4-1-2 3.5 2 1.5a7.8 7.8 0 0 0 0 2l-2 1.5 2 3.5 2.4-1a7.7 7.7 0 0 0 1.7 1L11 21h4l.4-2.9a7.7 7.7 0 0 0 1.7-1l2.4 1 2-3.5-2.1-1.6zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg><span class="dock-label"></span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.8 7.8 0 0 0 0-2l2-1.5-2-3.5-2.4 1a7.7 7.7 0 0 0-1.7-1L15 3h-4l-.4 2.9a7.7 7.7 0 0 0-1.7 1l-2.4-1-2 3.5 2 1.5a7.8 7.8 0 0 0 0 2l-2 1.5 2 3.5 2.4-1a7.7 7.7 0 0 0 1.7 1L11 21h4l.4-2.9a7.7 7.7 0 0 0 1.7-1l2.4 1 2-3.5-2.1-1.6zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg><span class="dock-label">Settings</span>
     </button>
   </nav>
 
@@ -929,7 +930,7 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
     </div>
   
     <section id="websites-section" class="content-section" aria-labelledby="websites-title" hidden>
-      <div class="section-heading"><div><h2 id="websites-title">Websites</h2><p>Open a website in a new tab using your preferred mode.</p></div></div>
+      <div class="section-heading"><div><h2 id="websites-title">Modify a Website</h2><p>Open a site in a different format, then customize its look when the site allows it.</p></div></div>
       <div class="arcade-settings-card websites-card">
         <label class="library-search-label" for="website-url">Website URL</label>
         <input class="library-search" id="website-url" type="url" placeholder="https://example.com" autocomplete="url" inputmode="url">
@@ -949,7 +950,16 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
           </optgroup>
         </select>
         <p class="website-help">Accepted formats: example.com, www.example.com, https://example.com, http://example.com, and //example.com.</p>
-        <button class="website-open-button" id="website-open" type="button">Open website</button>
+        <h3 class="website-editor-heading">Quick appearance editor</h3>
+        <p class="website-help">Text and image edits require the destination to allow page access. Color, zoom, and visual filters are applied to the displayed site.</p>
+        <label class="library-search-label" for="modify-text-find">Find text to replace</label><input class="library-search" id="modify-text-find" type="text" placeholder="Text currently on the page">
+        <label class="library-search-label" for="modify-text-replace">Replace it with</label><input class="library-search" id="modify-text-replace" type="text" placeholder="Your replacement text">
+        <label class="library-search-label" for="modify-image-find">Image URL to replace (optional)</label><input class="library-search" id="modify-image-find" type="url" placeholder="Current image URL or leave blank">
+        <label class="library-search-label" for="modify-image-replace">New image URL</label><input class="library-search" id="modify-image-replace" type="url" placeholder="https://example.com/new-image.png">
+        <div class="website-editor-grid"><label class="library-search-label" for="modify-page-color">Page background<input id="modify-page-color" type="color" value="#111111"></label><label class="library-search-label" for="modify-text-color">Text color<input id="modify-text-color" type="color" value="#ffffff"></label></div>
+        <label class="library-search-label" for="modify-page-zoom">Page size <output id="modify-page-zoom-value">100%</output></label><input id="modify-page-zoom" type="range" min="50" max="150" value="100" step="5">
+        <label class="library-search-label" for="modify-filter">Visual effect</label><select class="library-search" id="modify-filter"><option value="none">Original</option><option value="grayscale(1)">Black &amp; white</option><option value="sepia(1)">Vintage</option><option value="contrast(1.25) saturate(1.25)">High contrast</option><option value="blur(1px)">Soft focus</option></select>
+        <button class="website-open-button" id="website-open" type="button">Open website with changes</button><button class="arcade-theme-choice" id="website-reset-edits" type="button">Reset editor fields</button>
         <p class="website-help" id="website-message" role="status" aria-live="polite">Enter a full website address, then choose how to open it.</p>
       </div>
     </section>
@@ -1879,20 +1889,22 @@ renderFavorites();
       return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
         .replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
-    function wrapper(target, campusDisguise) {
+    function wrapper(target, campusDisguise, edits) {
       const safe = escapeAttribute(target);
+      const editJson = JSON.stringify(edits || {}).replace(/</g, "\\u003c");
       const title = campusDisguise ? 'Campus Student' : 'Website';
       const campusIcon = campusDisguise
         ? '<link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3zhJME8fr16iO9F2HfX_7MrPoe4sT-xQv4jq3jO45OQ&amp;s=10">'
         : '';
       return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' +
         title + '</title>' + campusIcon +
-        '<style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000}iframe{display:block;width:100%;height:100%;border:0;background:#000}</style></head><body><iframe src="' + safe +
-        '" title="' + title + '" allow="autoplay; fullscreen; gamepad; encrypted-media; picture-in-picture" allowfullscreen></iframe></body></html>';
+        '<style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000}iframe{display:block;width:100%;height:100%;border:0;background:#000;filter:' + (edits.filter||'none') + ';transform:scale(' + (Number(edits.zoom||100)/100) + ');transform-origin:top left;width:' + (10000/Number(edits.zoom||100)) + '%;height:' + (10000/Number(edits.zoom||100)) + '%}</style></head><body><iframe id="site-frame" src="' + safe +
+        '" title="' + title + '" allow="autoplay; fullscreen; gamepad; encrypted-media; picture-in-picture" allowfullscreen></iframe><script>(function(){var e=' + editJson + ';var f=document.getElementById("site-frame");f.addEventListener("load",function(){try{var d=f.contentDocument;if(!d)throw 0;if(e.bg)d.body.style.backgroundColor=e.bg;if(e.color)d.body.style.color=e.color;if(e.find&&e.replace){var w=d.createTreeWalker(d.body,NodeFilter.SHOW_TEXT),n;while(n=w.nextNode())if(n.nodeValue.indexOf(e.find)>-1)n.nodeValue=n.nodeValue.split(e.find).join(e.replace)}if(e.image)d.querySelectorAll("img").forEach(function(i){if(!e.imageFind||i.src.indexOf(e.imageFind)>-1)i.src=e.image})}catch(x){}})})();</script></body></html>';
     }
     openButton.addEventListener('click', () => {
       const target = normalizeUrl(urlInput.value);
       if (!target) { showMessage('Enter a valid website URL starting with http:// or https://.'); urlInput.focus(); return; }
+      const edits = {find:document.getElementById("modify-text-find").value,replace:document.getElementById("modify-text-replace").value,imageFind:document.getElementById("modify-image-find").value,image:document.getElementById("modify-image-replace").value,bg:document.getElementById("modify-page-color").value,color:document.getElementById("modify-text-color").value,zoom:document.getElementById("modify-page-zoom").value,filter:document.getElementById("modify-filter").value};
       const selectedMode = modeInput.value;
       const isUrlType = selectedMode.startsWith('urltype:');
       const urlType = isUrlType ? selectedMode.slice(8) : '';
@@ -1912,13 +1924,13 @@ renderFavorites();
             showMessage('Blob Tab needs the arcade to be opened from its normal HTTPS website.');
             return;
           }
-          const blob = new Blob([wrapper(target, false)], {type:'text/html'});
+          const blob = new Blob([wrapper(target, false, edits)], {type:'text/html'});
           const blobUrl = URL.createObjectURL(blob);
           tab.location.href = blobUrl;
           tab.addEventListener('pagehide', () => URL.revokeObjectURL(blobUrl), {once:true});
         } else {
           tab.document.open();
-          tab.document.write(wrapper(target, mode === 'campus'));
+          tab.document.write(wrapper(target, mode === 'campus', edits));
           tab.document.close();
         }
         showMessage('Opening ' + target);
@@ -1927,6 +1939,9 @@ renderFavorites();
         showMessage('This browser blocked that opening mode. Try the standard About:Blank option instead.');
       }
     });
+    const zoom=document.getElementById('modify-page-zoom');
+    zoom.addEventListener('input',()=>document.getElementById('modify-page-zoom-value').textContent=zoom.value+'%');
+    document.getElementById('website-reset-edits').addEventListener('click',()=>{['modify-text-find','modify-text-replace','modify-image-find','modify-image-replace'].forEach(id=>document.getElementById(id).value='');document.getElementById('modify-page-color').value='#111111';document.getElementById('modify-text-color').value='#ffffff';zoom.value='100';document.getElementById('modify-page-zoom-value').textContent='100%';document.getElementById('modify-filter').value='none';showMessage('Editor fields reset.')});
     urlInput.addEventListener('keydown', event => {
       if (event.key === 'Enter') openButton.click();
     });
