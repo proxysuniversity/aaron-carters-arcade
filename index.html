@@ -98,7 +98,7 @@
     }
     .loading-screen.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
     .loading-logo { display: block; width: min(78vw, 390px); max-height: 150px; object-fit: contain; }
-    .loading-message { display:block; width:100%; max-width:700px; box-sizing:border-box; align-self:center; margin:0 auto; color:#fff; font-size:13px; line-height:1.5; letter-spacing:.04em; text-align:center; overflow-wrap:anywhere; padding:0 20px; }
+    .loading-message { display:block; width:100%; max-width:700px; box-sizing:border-box; align-self:center; margin:0 auto; color:#fff; font-size:13px; line-height:1.5; letter-spacing:.04em; text-align:center; overflow-wrap:anywhere; padding:0 20px; transition:opacity .18s ease; }
     .loading-carousel { width:min(520px,88vw); height:24px; overflow:hidden; color:#aaa; font-size:12px; line-height:24px; letter-spacing:.035em; text-align:center; }
     .loading-carousel-track { display:flex; flex-direction:column; will-change:transform; transition:transform .55s cubic-bezier(.2,.75,.25,1); }
     .loading-carousel-item { display:block; flex:0 0 24px; height:24px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
@@ -1502,13 +1502,42 @@ renderFavorites();
       renderContent(apps, 'apps-grid', 'apps');
     });
 
-    // Pick one loading message each time the page opens, then reveal the page.
+    // Show at least two different random loading messages before revealing the page.
     (() => {
       const messages = SITE_CONFIG.loadingMessages;
       const message = document.getElementById('loadingMessage');
       const screen = document.getElementById('loadingScreen');
       const carouselTrack = document.getElementById('loadingCarouselTrack');
-      message.textContent = messages[Math.floor(Math.random() * messages.length)];
+      const shuffledMessages = [...messages].sort(() => Math.random() - 0.5);
+      const loadingMessagesToShow = shuffledMessages.slice(0, Math.min(2, shuffledMessages.length));
+      if (loadingMessagesToShow.length < 2 && messages.length) loadingMessagesToShow.push(messages[0]);
+      let loadingMessageIndex = 0;
+      let pageHasLoaded = false;
+      const loadingMessagesFinished = loadingMessagesToShow.length === 0;
+      if (message && loadingMessagesToShow.length) {
+        message.textContent = loadingMessagesToShow[0];
+        const messageTimer = window.setInterval(() => {
+          loadingMessageIndex += 1;
+          if (loadingMessageIndex < loadingMessagesToShow.length) {
+            message.style.opacity = '0';
+            window.setTimeout(() => {
+              message.textContent = loadingMessagesToShow[loadingMessageIndex];
+              message.style.opacity = '1';
+            }, 180);
+          } else {
+            window.clearInterval(messageTimer);
+            window.__arcadeLoadingMessagesFinished = true;
+            revealWhenReady();
+          }
+        }, 1050);
+      } else {
+        window.__arcadeLoadingMessagesFinished = true;
+      }
+      function revealWhenReady() {
+        if (pageHasLoaded && window.__arcadeLoadingMessagesFinished) {
+          window.setTimeout(() => screen.classList.add('is-done'), 250);
+        }
+      }
       const carouselMessages = [
         'Did you know?',
         'New games and surprises are waiting inside.',
@@ -1532,9 +1561,9 @@ renderFavorites();
         }, 2200);
       }
       window.addEventListener('load', () => {
-        window.setTimeout(() => screen.classList.add('is-done'), 850);
+        pageHasLoaded = true;
+        revealWhenReady();
       }, { once: true });
-      window.setTimeout(() => screen.classList.add('is-done'), 2200);
     })();
 
     // Use the browser's native cursor in the Campus Student disguise.
