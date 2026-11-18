@@ -1503,7 +1503,7 @@ renderFavorites();
       renderContent(apps, 'apps-grid', 'apps');
     });
 
-    // Show one randomly selected loading message, then reveal the page when it has loaded.
+    // Keep one main loading message, and show at least two random carousel messages before revealing the page.
     (() => {
       const messages = SITE_CONFIG.loadingMessages || [];
       const message = document.getElementById('loadingMessage');
@@ -1525,13 +1525,16 @@ renderFavorites();
         'Made to bring games, movies, shows, and apps together.',
         'Tip: allow pop-ups if you want to open sites in new tabs.'
       ];
-      let carouselTimer = null;
+      const randomPool = carouselMessages.slice(1);
+      const shuffled = [...randomPool].sort(() => Math.random() - 0.5);
+      const messagesToShow = shuffled.slice(0, 2);
       let carouselIndex = 0;
       let pageHasLoaded = document.readyState === 'complete';
       let hasRevealed = false;
+      let carouselTimer = null;
 
       function revealWhenReady() {
-        if (!pageHasLoaded || hasRevealed) return;
+        if (!pageHasLoaded || carouselIndex < 2 || hasRevealed) return;
         hasRevealed = true;
         if (carouselTimer !== null) window.clearInterval(carouselTimer);
         if (screen) window.setTimeout(() => screen.classList.add('is-done'), 250);
@@ -1539,13 +1542,21 @@ renderFavorites();
 
       if (carouselTrack) {
         carouselTrack.innerHTML = carouselMessages.map(text => '<span class="loading-carousel-item">' + escapeHTML(text) + '</span>').join('');
-        carouselTimer = window.setInterval(() => {
-          if (hasRevealed) return;
-          carouselIndex = carouselIndex === 0
-            ? 1 + Math.floor(Math.random() * (carouselMessages.length - 1))
-            : 1 + Math.floor(Math.random() * (carouselMessages.length - 1));
-          carouselTrack.style.transform = 'translateY(-' + (carouselIndex * 24) + 'px)';
-        }, 4000);
+        const showNextMessage = () => {
+          const selectedMessage = messagesToShow[carouselIndex];
+          const selectedIndex = carouselMessages.indexOf(selectedMessage);
+          carouselTrack.style.transform = 'translateY(-' + (selectedIndex * 24) + 'px)';
+          carouselIndex += 1;
+          if (carouselIndex >= 2) {
+            window.clearInterval(carouselTimer);
+            carouselTimer = null;
+            revealWhenReady();
+          }
+        };
+        showNextMessage();
+        carouselTimer = window.setInterval(showNextMessage, 4000);
+      } else {
+        carouselIndex = 2;
       }
 
       if (pageHasLoaded) revealWhenReady();
