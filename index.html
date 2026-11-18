@@ -1503,42 +1503,16 @@ renderFavorites();
       renderContent(apps, 'apps-grid', 'apps');
     });
 
-    // Show at least two different random loading messages before revealing the page.
+    // Show one randomly selected loading message, then reveal the page when it has loaded.
     (() => {
-      const messages = SITE_CONFIG.loadingMessages;
+      const messages = SITE_CONFIG.loadingMessages || [];
       const message = document.getElementById('loadingMessage');
       const screen = document.getElementById('loadingScreen');
       const carouselTrack = document.getElementById('loadingCarouselTrack');
-      const shuffledMessages = [...messages].sort(() => Math.random() - 0.5);
-      const loadingMessagesToShow = shuffledMessages.slice(0, Math.min(2, shuffledMessages.length));
-      if (loadingMessagesToShow.length < 2 && messages.length) loadingMessagesToShow.push(messages[0]);
-      let loadingMessageIndex = 0;
-      let pageHasLoaded = false;
-      const loadingMessagesFinished = loadingMessagesToShow.length === 0;
-      if (message && loadingMessagesToShow.length) {
-        message.textContent = loadingMessagesToShow[0];
-        const messageTimer = window.setInterval(() => {
-          loadingMessageIndex += 1;
-          if (loadingMessageIndex < loadingMessagesToShow.length) {
-            message.style.opacity = '0';
-            window.setTimeout(() => {
-              message.textContent = loadingMessagesToShow[loadingMessageIndex];
-              message.style.opacity = '1';
-            }, 180);
-          } else {
-            window.clearInterval(messageTimer);
-            window.__arcadeLoadingMessagesFinished = true;
-            revealWhenReady();
-          }
-        }, 1050);
-      } else {
-        window.__arcadeLoadingMessagesFinished = true;
+      if (message && messages.length) {
+        message.textContent = messages[Math.floor(Math.random() * messages.length)];
       }
-      function revealWhenReady() {
-        if (pageHasLoaded && window.__arcadeLoadingMessagesFinished) {
-          window.setTimeout(() => screen.classList.add('is-done'), 250);
-        }
-      }
+
       const carouselMessages = [
         'Did you know?',
         'New games and surprises are waiting inside.',
@@ -1551,17 +1525,31 @@ renderFavorites();
         'Made to bring games, movies, shows, and apps together.',
         'Tip: allow pop-ups if you want to open sites in new tabs.'
       ];
+      let carouselTimer = null;
+      let carouselIndex = 0;
+      let pageHasLoaded = document.readyState === 'complete';
+      let hasRevealed = false;
+
+      function revealWhenReady() {
+        if (!pageHasLoaded || hasRevealed) return;
+        hasRevealed = true;
+        if (carouselTimer !== null) window.clearInterval(carouselTimer);
+        if (screen) window.setTimeout(() => screen.classList.add('is-done'), 250);
+      }
+
       if (carouselTrack) {
         carouselTrack.innerHTML = carouselMessages.map(text => '<span class="loading-carousel-item">' + escapeHTML(text) + '</span>').join('');
-        let carouselIndex = 0;
-        window.setInterval(() => {
+        carouselTimer = window.setInterval(() => {
+          if (hasRevealed) return;
           carouselIndex = carouselIndex === 0
             ? 1 + Math.floor(Math.random() * (carouselMessages.length - 1))
-            : (carouselIndex === carouselMessages.length - 1 ? 1 : 1 + Math.floor(Math.random() * (carouselMessages.length - 1)));
+            : 1 + Math.floor(Math.random() * (carouselMessages.length - 1));
           carouselTrack.style.transform = 'translateY(-' + (carouselIndex * 24) + 'px)';
-        }, 2200);
+        }, 4000);
       }
-      window.addEventListener('load', () => {
+
+      if (pageHasLoaded) revealWhenReady();
+      else window.addEventListener('load', () => {
         pageHasLoaded = true;
         revealWhenReady();
       }, { once: true });
