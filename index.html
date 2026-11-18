@@ -1061,6 +1061,7 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
     <button type="button" id="openBlobTab">Open in blob tab</button>
     <button type="button" id="openCloakedTab">Open in about:blank cloak</button>
     <button type="button" id="openCampusDisguise">Open in about:blank cloak disguise<span class="button-subtitle">Disguises it as Infinite Campus, and even opens games, apps and movies inside that tab so you can stay hidden, HIGHLY recommended for those people who's teachers got go gurdian or sthm on</span></button>
+    <button type="button" id="openFailureDisguise">Failure About:Blank Disguise<span class="button-subtitle">Open the original arcade website in an about:blank tab named "No Active Tab".</span></button>
     <p class="tab-launcher-note">open it in different variants of tabs, or sthm idk.</p>
   </section>
   <div class="whats-new-modal" id="whatsNewModal" role="dialog" aria-modal="true" aria-labelledby="whatsNewTitle">
@@ -1746,6 +1747,16 @@ renderFavorites();
         if (!tab) { alert('The new tab was blocked. Allow pop-ups for this website and try again.'); return; }
         try { tab.document.open(); tab.document.write(makeWrapper('')); tab.document.close(); }
         catch (error) { tab.location.href = currentUrl; }
+      });
+      document.getElementById('openFailureDisguise')?.addEventListener('click', () => {
+        const tab = window.open('about:blank', '_blank');
+        if (!tab) { alert('The new tab was blocked. Allow pop-ups for this website and try again.'); return; }
+        try {
+          const safeUrl = currentUrl.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          tab.document.open();
+          tab.document.write(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>No Active Tab</title><link rel="icon" href="https://static.thenounproject.com/png/170417-200.png"><style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#000;overflow:hidden}iframe{display:block;width:100%;height:100%;border:0;background:#000}</style></head><body><iframe src="${safeUrl}" title="Aaron Carter's Arcade" allow="autoplay; fullscreen; gamepad; encrypted-media; picture-in-picture" allowfullscreen></iframe></body></html>`);
+          tab.document.close();
+        } catch (error) { tab.location.href = currentUrl; }
       });
       document.getElementById('openCampusDisguise')?.addEventListener('click', () => {
         const tab = window.open('about:blank', '_blank');
