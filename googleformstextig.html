@@ -1,5 +1,46 @@
-<body style="background:white;color:black;font-size:32px;">
-google links don't work in about:blank pages so again, need something added? here: https://forms.gle/rnEDTZDkT14nzWsdA _____________________________________
 
-  also i just found out that if go gurdian and some other block websites are watching you the about:blank pages are black on their screen but the title of the page/tab shows so you have a very good advantage. i will be changing page/tab titles and adding apps this will replace proxy's university entirely soon... stay tuned.
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body {
+            margin: 0;
+            background: white;
+            font-family: Arial, sans-serif;
+        }
+
+        #message {
+            display: none;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 18px;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+<div id="message">
+    bro allow pop-ups and refresh or go back to here gng-a-lang
+</div>
+
+<script>
+    const link = "https://forms.gle/rnEDTZDkT14nzWsdA";
+
+    const newTab = window.open(link, "_blank");
+
+    if (newTab) {
+        window.close();
+    }
+
+    setTimeout(() => {
+        if (!newTab || !newTab.closed) {
+            document.getElementById("message").style.display = "block";
+        }
+    }, 2000);
+</script>
+
 </body>
+</html>
