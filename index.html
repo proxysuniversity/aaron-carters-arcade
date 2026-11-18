@@ -950,6 +950,10 @@ body.arcade-always-show-info .tile-art img { filter:brightness(.78); }
           </optgroup>
         </select>
         <p class="website-help">Accepted formats: example.com, www.example.com, https://example.com, http://example.com, and //example.com.</p>
+        <label class="arcade-setting-row campus-cloak-option" for="website-campus-cloak">
+          <span class="arcade-setting-copy"><strong>Add the Campus Student Cloak</strong><span>Press Space to activate disguise and Press Space again to get out of it</span></span>
+          <input id="website-campus-cloak" type="checkbox">
+        </label>
         <h3 class="website-editor-heading">Quick appearance editor</h3>
         <p class="website-help">Text and image edits require the destination to allow page access. Color, zoom, and visual filters are applied to the displayed site.</p>
         <label class="library-search-label" for="modify-text-find">Find text to replace</label><input class="library-search" id="modify-text-find" type="text" placeholder="Text currently on the page">
@@ -1898,17 +1902,22 @@ renderFavorites();
       return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
         .replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
-    function wrapper(target, campusDisguise, edits) {
+    function wrapper(target, campusDisguise, edits, enableCampusCloak) {
       const safe = escapeAttribute(target);
       const editJson = JSON.stringify(edits || {}).replace(/</g, "\\u003c");
       const title = campusDisguise ? 'Campus Student' : (edits.title || 'Website');
       const campusIcon = campusDisguise
         ? '<link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3zhJME8fr16iO9F2HfX_7MrPoe4sT-xQv4jq3jO45OQ&amp;s=10">'
         : '';
-      return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' +
+      let html = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' +
         title + '</title>' + campusIcon +
         '<style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000}iframe{display:block;width:100%;height:100%;border:0;background:#000;filter:' + (edits.filter||'none') + ';opacity:' + (Number(edits.opacity||100)/100) + ';border-radius:' + Number(edits.radius||0) + 'px;transform:scale(' + (Number(edits.zoom||100)/100) + ');transform-origin:top left;width:' + (10000/Number(edits.zoom||100)) + '%;height:' + (10000/Number(edits.zoom||100)) + '%}</style></head><body><iframe id="site-frame" src="' + safe +
         '" title="' + title + '" allow="autoplay; fullscreen; gamepad; encrypted-media; picture-in-picture" allowfullscreen></iframe><script>(function(){var e=' + editJson + ';var f=document.getElementById("site-frame");f.addEventListener("load",function(){try{var d=f.contentDocument;if(!d)throw 0;if(e.bg)d.body.style.backgroundColor=e.bg;if(e.color)d.body.style.color=e.color;if(e.find&&e.replace){var w=d.createTreeWalker(d.body,NodeFilter.SHOW_TEXT),n;while(n=w.nextNode())if(n.nodeValue.indexOf(e.find)>-1)n.nodeValue=n.nodeValue.split(e.find).join(e.replace)}if(e.image)d.querySelectorAll("img").forEach(function(i){if(!e.imageFind||i.src.indexOf(e.imageFind)>-1)i.src=e.image});if(e.hideImages)d.querySelectorAll("img,picture,svg").forEach(function(n){n.style.display="none"});if(e.hideVideos)d.querySelectorAll("video,iframe").forEach(function(n){n.style.display="none"});if(e.hideSelector)d.querySelectorAll(e.hideSelector).forEach(function(n){n.style.display="none"});if(e.dark)d.documentElement.style.filter="invert(1) hue-rotate(180deg)";if(e.scrollbars){var st=d.createElement("style");st.textContent="::-webkit-scrollbar{display:none}*{scrollbar-width:none}";d.head.appendChild(st)}if(e.css){var cs=d.createElement("style");cs.textContent=e.css;d.head.appendChild(cs)}if(e.banner){var bn=d.createElement("div");bn.textContent=e.banner;bn.style.cssText="position:sticky;top:0;z-index:2147483647;padding:12px;text-align:center;font-weight:bold;background:"+e.bannerColor+";color:#111";d.body.prepend(bn)}}catch(x){}})})();<\/script></body></html>';
+      if (enableCampusCloak) {
+        const cloak = '<div id="campus-student-cloak" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:2147483647;overflow:auto;background:#fff"><img src="https://proxysuniversity.github.io/hidepage.png" alt="" style="display:block;width:100%;height:auto;min-height:100%;object-fit:contain"></div><script>(function(){var v=document.getElementById("campus-student-cloak"),t=document.querySelector("title"),f=document.querySelector("link[rel~=icon]"),ot=t?t.textContent:"Website",of=f?f.getAttribute("href"):null,ico="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3zhJME8fr16iO9F2HfX_7MrPoe4sT-xQv4jq3jO45OQ&s=10",on=false;function toggle(){on=!on;v.style.display=on?"block":"none";v.setAttribute("aria-hidden",String(!on));if(t)t.textContent=on?"Campus Student":ot;if(f)f.href=on?ico:of;if(on)v.scrollTop=0}window.addEventListener("keydown",function(e){if(e.code!=="Space"||e.repeat||e.ctrlKey||e.altKey||e.metaKey)return;var a=e.target;if(a&&(a.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)))return;e.preventDefault();toggle()})})();<\/script>';
+        html = html.replace('</body>', cloak + '</body>');
+      }
+      return html;
     }
     openButton.addEventListener('click', () => {
       const target = normalizeUrl(urlInput.value);
@@ -1933,13 +1942,13 @@ renderFavorites();
             showMessage('Blob Tab needs the arcade to be opened from its normal HTTPS website.');
             return;
           }
-          const blob = new Blob([wrapper(target, false, edits)], {type:'text/html'});
+          const blob = new Blob([wrapper(target, false, edits, document.getElementById('website-campus-cloak').checked)], {type:'text/html'});
           const blobUrl = URL.createObjectURL(blob);
           tab.location.href = blobUrl;
           tab.addEventListener('pagehide', () => URL.revokeObjectURL(blobUrl), {once:true});
         } else {
           tab.document.open();
-          tab.document.write(wrapper(target, mode === 'campus', edits));
+          tab.document.write(wrapper(target, mode === 'campus', edits, document.getElementById('website-campus-cloak').checked));
           tab.document.close();
         }
         showMessage('Opening ' + target);
@@ -1953,7 +1962,7 @@ renderFavorites();
     const radius=document.getElementById('modify-border-radius'),opacity=document.getElementById('modify-opacity');
     radius.addEventListener('input',()=>document.getElementById('modify-border-radius-value').textContent=radius.value+'px');
     opacity.addEventListener('input',()=>document.getElementById('modify-opacity-value').textContent=opacity.value+'%');
-    document.getElementById('website-reset-edits').addEventListener('click',()=>{['modify-text-find','modify-text-replace','modify-image-find','modify-image-replace'].forEach(id=>document.getElementById(id).value='');document.getElementById('modify-page-color').value='#111111';document.getElementById('modify-text-color').value='#ffffff';zoom.value='100';document.getElementById('modify-page-zoom-value').textContent='100%';document.getElementById('modify-filter').value='none';['modify-site-title','modify-hide-selector','modify-custom-css','modify-banner-text'].forEach(id=>document.getElementById(id).value='');document.getElementById('modify-banner-color').value='#ffc107';radius.value='0';opacity.value='100';document.getElementById('modify-border-radius-value').textContent='0px';document.getElementById('modify-opacity-value').textContent='100%';['modify-hide-images','modify-hide-videos','modify-hide-scrollbars','modify-dark-mode'].forEach(id=>document.getElementById(id).checked=false);showMessage('Editor fields reset.')});
+    document.getElementById('website-reset-edits').addEventListener('click',()=>{['modify-text-find','modify-text-replace','modify-image-find','modify-image-replace'].forEach(id=>document.getElementById(id).value='');document.getElementById('modify-page-color').value='#111111';document.getElementById('modify-text-color').value='#ffffff';zoom.value='100';document.getElementById('modify-page-zoom-value').textContent='100%';document.getElementById('modify-filter').value='none';['modify-site-title','modify-hide-selector','modify-custom-css','modify-banner-text'].forEach(id=>document.getElementById(id).value='');document.getElementById('modify-banner-color').value='#ffc107';radius.value='0';opacity.value='100';document.getElementById('modify-border-radius-value').textContent='0px';document.getElementById('modify-opacity-value').textContent='100%';['modify-hide-images','modify-hide-videos','modify-hide-scrollbars','modify-dark-mode','website-campus-cloak'].forEach(id=>document.getElementById(id).checked=false);showMessage('Editor fields reset.')});
     urlInput.addEventListener('keydown', event => {
       if (event.key === 'Enter') openButton.click();
     });
